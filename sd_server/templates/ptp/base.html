@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!-- saved from url=(0035)http://sco.h-its.org/exelixis/pear/ -->
+<html lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    {% block title %}Species delimitation{% endblock %}
+    <link rel="stylesheet" href="/static/stdtheme.css" />
+</head>
+    
+<body>
+    <div id="wrapper">
+        
+    <div id="header" style="padding-left: 15px;">
+      <table cellspacing="0" cellpadding="0" style="padding-top:5px; padding-bottom: 5px;">
+        <tbody>
+          <tr style="height: 56px;">
+           {#<td id="logoimage"><a href="http://sco.h-its.org/exelixis/pear/index.html"><img alt="logo" src="./PEAR - Pair-End read AssembleR_files/pear-logo2.png"></a></td>#}
+           <td style="padding-left: 0.5em;">
+            <div id="projectname"><a style="color: black" href=""><h1><strong>Species delimitation server</strong></h1></a></div>
+            {#<div id="projectbrief"><a href="http://sco.h-its.org/exelixis/pear/index.html" style="color: black"><b>P</b>air-<b>E</b>nd reads <b>A</b>ssemble<b>R</b></a></div></td>#}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <hr>
+    
+    <div id="subheader">
+      <table width="100%"><tbody>
+      <tr>
+      <td style="line-height: 20px;">
+        {% block subheader %}
+            The species delimitation server provide a web interface of various methods that delimit species with single locus molecular data.
+        {% endblock %}    
+      </td>
+      </tr></tbody>
+      </table>
+    </div>
+    
+    <div id="main">
+        {% block mainbody %}
+            List of implemented methods
+        {% endblock %}    
+    </div>
+    <!--
+    <div id="footer" style="text-align: center">
+     <table width="100%" style="text-align: center"><tr>
+      <td style="line-height: 20px;">(¯`·._.··¸.-~*´¨¯¨`*·~-.,-(_PEAR_)-,.-~*´¨¯¨`*·~-.¸··._.·´¯) </td>
+     </tr></table>
+    </div>
+    -->
+   </div>
+  
+
+</body>
+</html>
