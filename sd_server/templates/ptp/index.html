@@ -1,1 +1,8 @@
 {% extends "ptp/base.html" %}
+{% block forms %}
+<form action="/ptp/" method="post">
+    {% csrf_token %}
+    {{ pform.as_p }}
+<input type="submit" value="Submit" />
+</form>
+{% endblock %}
