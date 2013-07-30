@@ -3,7 +3,16 @@
     <div class="alert alert-info">
         <h4>Results</h4>
     </div>
-    <p>
-    {{ result }}
-    </p>
+    {% if result == "Job still running"  %}
+        <p>
+                {{ result }}
+        </p>
+        <p>
+                Click <a href = "/ptp/result/{{jobid}}">here</a> to refresh.
+        </p>
+    {% else %}
+        <p>
+            {{ result|safe }}
+        </p>
+    {% endif %}
 {% endblock %}

@@ -633,6 +633,7 @@ def print_options():
 
 
 if __name__ == "__main__":
+	"""
 	print("This is PTP - a Poisson tree processes model for species delimitation.")
 	print("Version 1.1 released by Jiajie Zhang on 17-05-2013\n")
 	print("This program will delimit species on a rooted phylogenetic tree.")
@@ -641,6 +642,7 @@ if __name__ == "__main__":
 	print("The program needs ETE(http://ete.cgenomics.org/) package to be installed.\n")
 	print("Questions and bug reports, please send to:")
 	print("bestzhangjiajie@gmail.com\n")
+	"""
 	
 	if len(sys.argv) < 3: 
 		print_options()
@@ -750,4 +752,5 @@ if __name__ == "__main__":
 			me.showTree(scale = sscale)
 	except ete2.parser.newick.NewickError:
 		print("Unexisting tree file or Malformed newick tree structure.")
+	print("finished")
 

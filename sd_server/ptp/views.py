@@ -10,6 +10,7 @@ import os
 class PTPForm(forms.Form):
     treefile = forms.FileField(label='My phylogenetic input tree:')
     rooted = forms.ChoiceField(choices = (("untrooted", "Unrooted"), ("rooted", "Rooted")), label = 'My tree is:')
+    pvalue = forms.DecimalField(label = 'P-value:', initial = 0.001)
     sender = forms.EmailField(label='My e-mail address:')
 
 def index(request):
@@ -38,27 +39,29 @@ def ptp_index(request):
             handle_uploaded_file(fin = request.FILES['treefile'] , fout = newfilename)
             job.filepath = filepath
             job.save()
+            pvalue = ptp_form.cleaned_data['pvalue']
             if ptp_form.cleaned_data['rooted'] == "rooted":
-                run_ptp(fin = newfilename, fout = filepath + "output.txt", rooted = True)
+                run_ptp(fin = newfilename, fout = filepath + "output.txt", rooted = True, pv = pvalue)
             else:
-                run_ptp(fin = newfilename, fout = filepath + "output.txt", rooted = False)
+                run_ptp(fin = newfilename, fout = filepath + "output.txt", rooted = False, pv = pvalue)
             
             #return HttpResponseRedirect('result/') # Redirect after POST
-            return show_ptp_result(request, job_id = job.id, out_path = filepath + "output.txt")
+            return show_ptp_result(request, job_id = repr(job.id))
     else:
         ptp_form = PTPForm() # An unbound form
     context = {'pform':ptp_form}
     return render(request, 'ptp/index.html', context)
 
-def show_ptp_result(request, job_id, out_path = ""):
+def show_ptp_result(request, job_id):
+    out_path = settings.MEDIA_ROOT + job_id + "/output.txt"
     with open(out_path) as outfile:
         lines = outfile.readlines()
         if len(lines) > 5:
-            results="".join(lines[:-1])
+            results="<br>".join(lines[:-1])
             context = {'result':results}
             return render(request, 'ptp/results.html', context)
         else:
-            return render(request, 'ptp/results.html', {'result':"Job still running"})
+            return render(request, 'ptp/results.html', {'result':"Job still running", 'jobid':job_id})
      
 
 def handle_uploaded_file(fin, fout):
@@ -66,8 +69,8 @@ def handle_uploaded_file(fin, fout):
         for chunk in fin.chunks():
             destination.write(chunk)
             
-def run_ptp(fin, fout, rooted = False):
+def run_ptp(fin, fout, rooted = False, pv = 0.001):
     if rooted:
-        Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/PTP.py", "-t", fin, "-p"], stdout=open(fout, "w"))
+        Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/PTP.py", "-t", fin, "-pvalue", str(pv), "-p"], stdout=open(fout, "w"))
     else:
-        Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/PTP.py", "-t", fin, "-p", "-r"], stdout=open(fout, "w"))
+        Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/PTP.py", "-t", fin, "-pvalue", str(pv), "-p", "-r"], stdout=open(fout, "w"))
