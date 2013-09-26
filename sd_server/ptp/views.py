@@ -11,7 +11,7 @@ class PTPForm(forms.Form):
     treefile = forms.FileField(label='My phylogenetic input tree:')
     rooted = forms.ChoiceField(choices = (("untrooted", "Unrooted"), ("rooted", "Rooted")), label = 'My tree is:')
     pvalue = forms.DecimalField(label = 'P-value:', initial = 0.001)
-    sender = forms.EmailField(label='My e-mail address:')
+    #sender = forms.EmailField(label='My e-mail address:')
 
 def index(request):
     context = {}
@@ -26,7 +26,8 @@ def ptp_index(request):
         if ptp_form.is_valid(): # All validation rules pass
             # Process the data in form.cleaned_data
             job = Jobs()
-            job.email = ptp_form.cleaned_data['sender']
+            #job.email = ptp_form.cleaned_data['sender']
+            job.email = "noemail@noemail.com"
             if ptp_form.cleaned_data['rooted'] == "rooted":
                 job.data_type = "rptree"
             else:

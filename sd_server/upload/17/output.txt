@@ -1,0 +1,24 @@
+This is PTP - a Poisson tree processes model for species delimitation.
+Version 1.1 released by Jiajie Zhang on 17-05-2013
+
+This program will delimit species on a rooted phylogenetic tree.
+The input tree should be in Newick format (such as the output from RAxML).
+PTP can also infer phylogenetic tree using RAxML, currently only support DNA on GTRGAMMA.
+The program needs ETE(http://ete.cgenomics.org/) package to be installed.
+
+Questions and bug reports, please send to:
+bestzhangjiajie@gmail.com
+
+Speciation rate:8.333333333333334
+Coalesecnt rate:55.04587155963303
+Null logl:20.069301283618106
+MAX logl:24.77058241308684
+P-value:0.0021668241849371883
+Species 1:
+          C
+          d1
+          d2
+          e1
+          e2
+          f1
+          f2

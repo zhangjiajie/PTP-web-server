@@ -1,0 +1,14 @@
+Speciation rate:1.4814814814814814
+Coalesecnt rate:7.4074074074074066
+Null logl:5.899858521332604
+MAX logl:8.810890181656289
+P-value:0.015826368796540202
+Species 1:
+          A
+          B
+          C
+          D
+          E
+          F
+          G
+finished
