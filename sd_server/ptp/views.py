@@ -59,7 +59,7 @@ def show_ptp_result(request, job_id):
         lines = outfile.readlines()
         if len(lines) > 5:
             results="<br>".join(lines[:-1])
-            context = {'result':results}
+            context = {'result':results, 'jobid':job_id}
             return render(request, 'ptp/results.html', context)
         else:
             return render(request, 'ptp/results.html', {'result':"Job still running", 'jobid':job_id})

@@ -6,11 +6,18 @@
     {% if result == "Job still running"  %}
         <p>
                 {{ result }}
+                
         </p>
         <p>
                 Click <a href = "/ptp/result/{{jobid}}">here</a> to refresh.
         </p>
     {% else %}
+        <p>
+            <img src="{{ MEDIA_URL }}{{jobid}}/input.tre.png" />
+        </p>
+        <p>
+            <a href = "{{ MEDIA_URL }}{{jobid}}/input.tre.pdf">Download output in PDF.</a>
+        </p>
         <p>
             {{ result|safe }}
         </p>
