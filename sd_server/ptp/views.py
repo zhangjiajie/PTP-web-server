@@ -41,6 +41,7 @@ def ptp_index(request):
             job.filepath = filepath
             job.save()
             pvalue = ptp_form.cleaned_data['pvalue']
+            os.chmod(filepath, 0777)
             if ptp_form.cleaned_data['rooted'] == "rooted":
                 run_ptp(fin = newfilename, fout = filepath + "output.txt", rooted = True, pv = pvalue)
             else:
@@ -58,7 +59,7 @@ def show_ptp_result(request, job_id):
     with open(out_path) as outfile:
         lines = outfile.readlines()
         if len(lines) > 5:
-            results="<br>".join(lines[:-1])
+            results="<br>".join(lines)
             context = {'result':results, 'jobid':job_id}
             return render(request, 'ptp/results.html', context)
         else:
@@ -72,6 +73,6 @@ def handle_uploaded_file(fin, fout):
             
 def run_ptp(fin, fout, rooted = False, pv = 0.001):
     if rooted:
-        Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/PTP.py", "-t", fin, "-pvalue", str(pv), "-p"], stdout=open(fout, "w"))
+        Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/PTP.py", "-t", fin, "-pvalue", str(pv), "-p"], stdout=open(fout, "w"), stderr=open(fout+".err", "w") )
     else:
-        Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/PTP.py", "-t", fin, "-pvalue", str(pv), "-p", "-r"], stdout=open(fout, "w"))
+        Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/PTP.py", "-t", fin, "-pvalue", str(pv), "-p", "-r"], stdout=open(fout, "w"), stderr=open(fout+".err", "w"))

@@ -752,6 +752,28 @@ def auto_stas(sfin):
 			if numreads < min_reads_num_match:
 				min_reads_num_match = numreads
 	
+	"""
+	last_min_reads_num_match = -1
+	
+	min_reads = 0
+	
+	for i in range(1000):
+		if min_reads_num_match < last_min_reads_num_match:
+			min_reads = i - 1 
+			break
+		else:
+			last_min_reads_num_match = min_reads_num_match
+			min_reads_num_match = 0
+		
+		for k in range(len(lines)):
+			line = lines[k]
+			if line.startswith("R"):
+				nline = lines[k+1]
+				numreads = int(nline.split(":")[-1])
+				if numreads > i:
+					min_reads_num_match = min_reads_num_match + 1
+	"""
+	
 	match1 = 0 
 	match2 = 0
 	match3 = 0

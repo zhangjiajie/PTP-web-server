@@ -1,0 +1,58 @@
+Speciation rate: 3.575
+Coalesecnt rate: 45.474
+Null logl: 102.203
+MAX logl: 157.876
+P-value: 0.000
+Kolmogorov-Smirnov test for model fitting:
+Speciation: Dtest = 0.936 p-value >= 0.1 excellent model fitting
+Species 1:
+          829334_Ika
+Species 2:
+          829421_Boz
+          829423_Boz
+Species 3:
+          829376_Kea
+          829384_Kea
+          829886_Att
+          829889_Att
+Species 4:
+          829893_Att
+          829894_Att
+Species 5:
+          835731_And
+          829359_And
+          829360_And
+Species 6:
+          835760_And
+          835758_And
+          835733_And
+          835762_And
+          835761_And
+          829868_Tin
+Species 7:
+          829809_Her
+          829817_Her
+          829838_Par
+          829841_Par
+          829851_Nax
+          829839_Par
+          829883_Mil
+          829884_Mil
+Species 8:
+          835768_Kur
+          835770_Kur
+          835769_Kur
+          829422_Boz
+Species 9:
+          835771_Boz
+          835772_Boz
+          829419_Boz
+          829418_Boz
+          829420_Boz
+Species 10:
+          829405_Kos
+          829406_Kos
+Species 11:
+          829592StMy
+Species 12:
+          829599StNa

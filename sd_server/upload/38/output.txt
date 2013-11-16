@@ -1,0 +1,82 @@
+This is PTP - a Poisson tree processes model for species delimitation.
+Version 1.2 released by Jiajie Zhang on 10-11-2013
+
+This program will delimit species on a rooted phylogenetic tree.
+The input tree should be in Newick format (such as the output from RAxML).
+PTP can also infer phylogenetic tree using RAxML, currently only support DNA on GTRGAMMA.
+
+--Please cite: "J. Zhang, P. Kapli, P. Pavlidis, A. Stamatakis: A General
+--Species Delimitation Method with Applications to Phylogenetic Placements. 
+--Bioinformatics (2013), 29 (22): 2869-2876." 
+--If you find PTP is useful to your research. 
+
+Questions and bug reports, please send to:
+bestzhangjiajie@gmail.com
+
+Speciation rate: 2.606
+Coalesecnt rate: 39.262
+Null logl: 122.401
+MAX logl: 196.800
+P-value: 0.000
+Kolmogorov-Smirnov test for model fitting:
+Speciation: Dtest = 0.461 p-value >= 0.1 excellent model fitting
+Coalescent: Dtest = 2.013 p-value < 0.01 poor model fitting
+Species 1:
+          795073Micr
+Species 2:
+          795075Micr
+Species 3:
+          829525_And
+          829579_Myk
+Species 4:
+          829537_Boz
+          829685_Boz
+          829684_Boz
+          829539_Boz
+          829540_Boz
+          829735_Izm
+Species 5:
+          829543_Kos
+          829568_Kos
+Species 6:
+          829536_Did
+Species 7:
+          829546_Boz
+          829549_Boz
+Species 8:
+          723083_And
+          723084_And
+          829575_And
+          829524_And
+          723085_Tin
+          829563_Tin
+          829528_And
+Species 9:
+          829520_Amo
+          829558_Amo
+          829559_Amo
+Species 10:
+          723086_Nax
+          829534_Nax
+          829535_Nax
+          829578_Nax
+          829556_Her
+          829560_Nax
+          829577_Nax
+          829576_Nax
+          829567_San
+          723089_Nax
+          723090_Nax
+          829523_Ant
+          829561_Nax
+          829564_Mil
+          829573_Mil
+          829565_Mil
+          829572_Mil
+          829566_Mil
+Species 11:
+          829529_Myk
+          829532_Myk
+          829533_Myk
+          829530_Myk
+          829531_Myk
