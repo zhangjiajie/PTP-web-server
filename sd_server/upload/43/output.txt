@@ -1,0 +1,13 @@
+Highest llh:8.070998396541352
+Num spe:3
+Null llh:7.975535709419847
+P-value:0.90895227664679057
+
+Species 1:
+	A, B, C,
+Species 2:
+	D, E,
+Species 3:
+	F, G,
+
+Final number of estimated species by GMYC: 1

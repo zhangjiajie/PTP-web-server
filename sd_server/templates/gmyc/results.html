@@ -1,0 +1,25 @@
+{% extends "gmyc/base.html" %}
+{% block forms %}
+    <div class="alert alert-info">
+        <h4>Results</h4>
+    </div>
+    {% if result == "Job still running"  %}
+        <p>
+                {{ result }}
+                
+        </p>
+        <p>
+                Click <a href = "/gmyc/result/{{jobid}}">here</a> to refresh.
+        </p>
+    {% else %}
+        <p>
+            <img src="{{ MEDIA_URL }}{{jobid}}/input.tre.png" />
+        </p>
+        <p>
+            <a href = "{{ MEDIA_URL }}{{jobid}}/input.tre.pdf">Download output in PDF.</a>
+        </p>
+        <p>
+            {{ result|safe }}
+        </p>
+    {% endif %}
+{% endblock %}

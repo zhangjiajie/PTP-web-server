@@ -1,0 +1,33 @@
+{% extends "gmyc/base.html" %}
+{% block forms %}
+    <div class="alert alert-info">
+        <h4>I have an ultrametric bifurcating tree</h4>
+    </div>
+    <div class = "bd-4">
+        <p>
+        This is a web interface for single threshold <a href = "http://sysbio.oxfordjournals.org/content/62/5/707">GMYC model</a> implemented 
+        in Python. Please cite: <br />
+        <a href = "http://bioinformatics.oxfordjournals.org/content/29/22/2869">
+        <b>A General Species Delimitation Method with Applications to Phylogenetic Placements.</b> 
+        <b>Zhang, Jiajie, Kapli, P., Pavlidis, P., and Stamatakis, A.</b> 
+        <i>Bioinformatics (Oxford, England)(2013), 29 (22): 2869-2876</i> 
+        </a> <br />
+        if you find it is useful to your research.
+        </p>
+        <p>
+            You can find the python implementation of the single threshold GMYC model in my <a href="https://github.com/zhangjiajie/SpeciesCounting">GitHub repository</a>.
+            I encourage you to try the original <a href = "http://barralab.bio.ic.ac.uk/downloads.html"> R implementation</a>, 
+            it has much richer features and has been widely used and tested.
+            Be aware the results from Python and R implementation might differ slightly, this is due to different ways of parameter optimizations. 
+            Also note the input tree should be strictly ultrametric and bifurcating (with no zero branch lengths).
+        </p>
+        
+    </div>
+    <p>
+    <form action="/gmyc/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ pform.as_p }}
+    <input type="submit" value="Submit" />
+    </form>
+    </p>
+{% endblock %}

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>{% block title %}Species delimitation server{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="species delimitation, PTP, GMYC, CROP">
+    <meta name="description" content="species delimitation, PTP, GMYC">
     <meta name="author" content="Jiajie Zhang">
 
     <!-- Le styles -->
@@ -16,6 +16,11 @@
       }
       .sidebar-nav {
         padding: 9px 0;
+      }
+      .bd-4 {
+          border: 2px solid DarkViolet;
+          padding: 10px;
+          margin-top: 5px
       }
 
       @media (max-width: 980px) {
@@ -49,13 +54,14 @@
           </button>
           <a class="brand" href="/ptp/">PTP web server</a>
           <a class="brand" href="/gmyc/">GMYC web server</a>
+          
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
               <a href="http://www.exelixis-lab.org/" class="navbar-link">The Exelixis Lab</a>
             </p>
             <ul class="nav">
               <!-- <li class="active"><a href="#">Home</a></li> -->
-              <li><a href="http://sco.h-its.org/exelixis/web/software/PTP/index.html">About PTP</a></li>
+              <li><a href="http://sco.h-its.org/exelixis/web/software/PTP/index.html">About PTP and GMYC</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -70,11 +76,11 @@
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               {% block sidebar %}
-              <li class="nav-header">PTP species delimitation</li>
-              <li class="active"><a href="/ptp/">PTP web server</a></li>
-              <li><a href="http://sco.h-its.org/exelixis/web/software/PTP/index.html">About PTP</a></li>
-              <li><a href="http://bioinformatics.oxfordjournals.org/content/29/22/2869">PTP paper</a></li>
-              <li><a href="https://github.com/zhangjiajie/SpeciesCounting">Download PTP</a></li>
+              <li class="nav-header">GMYC species delimitation</li>
+              <li class="active"><a href="/gmyc/">GMYC web server</a></li>
+              <li><a href="http://sco.h-its.org/exelixis/web/software/PTP/index.html">About this web server</a></li>
+              <li><a href="http://bioinformatics.oxfordjournals.org/content/29/22/2869">How to cite</a></li>
+              <li><a href="https://github.com/zhangjiajie/SpeciesCounting">Download GMYC in Python</a></li>
               {% endblock %}
             </ul>
           </div><!--/.well -->

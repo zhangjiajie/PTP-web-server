@@ -1,0 +1,32 @@
+This is pGMYC - a python implementation of GMYC model for species delimitation.
+Version 1.1 released by Jiajie Zhang on 10-11-2013
+
+This program will delimit species on a rooted ultrametric tree, 
+using single threshold GMYC model.
+The input tree should be in Newick format and must be ultrametric.
+Some common programs to infer ultrametric tree are: BEAST, DPPDIV and r8s.
+pGMYC needs scipy and matplotlib packages to be installed.
+
+**This new version experimentally support multifurcating tree, which 
+**is quite common for many ultrametric tree inference programs.
+**Note: pGMYC does not check the ultrametricity of the input tree! 
+
+--Please cite: "J. Zhang, P. Kapli, P. Pavlidis, A. Stamatakis: A General
+--Species Delimitation Method with Applications to Phylogenetic Placements. 
+--Bioinformatics (2013), 29 (22): 2869-2876." 
+--If you found pGMYC is useful to your research. 
+
+Questions and bug reports, please send to:
+bestzhangjiajie@gmail.com
+
+Highest llh:8.070998396541352
+Num spe:3
+Null llh:7.975535709419847
+P-value:0.90895227664679057
+Species 1:
+	A, B, C,
+Species 2:
+	D, E,
+Species 3:
+	F, G,
+Final number of estimated species by GMYC: 1

@@ -695,6 +695,7 @@ def gmyc(tree, print_detail = False, show_tree = False, show_llh = False, show_l
 	print("Num spe:" + repr(best_num_spe))
 	print("Null llh:" + repr(null_logl))
 	print("P-value:" + repr(lrt.get_p_value()))
+	print("")
 	
 	if show_lineages:
 		utree.num_lineages(wt_list)
@@ -711,6 +712,9 @@ def gmyc(tree, print_detail = False, show_tree = False, show_llh = False, show_l
 	
 	if show_tree:
 		utree.tree.show()
+	else:
+		utree.tree.render(tree+".png")
+		utree.tree.render(tree+".pdf")
 	
 	if lrt.get_p_value() >= pv:
 		return one_spe
@@ -747,6 +751,7 @@ def print_options():
 
 
 if __name__ == "__main__":
+	"""
 	print("This is pGMYC - a python implementation of GMYC model for species delimitation.")
 	print("Version 1.1 released by Jiajie Zhang on 10-11-2013\n")
 	print("This program will delimit species on a rooted ultrametric tree, ")
@@ -763,6 +768,7 @@ if __name__ == "__main__":
 	print("--If you found pGMYC is useful to your research. \n")
 	print("Questions and bug reports, please send to:")
 	print("bestzhangjiajie@gmail.com\n")
+	"""
 	if len(sys.argv) < 3: 
 		print_options()
 		sys.exit()
@@ -822,6 +828,7 @@ if __name__ == "__main__":
 	
 	try:
 		sp = gmyc(tree = stree, print_detail = sprint_detail, show_tree = sshow_tree, show_llh = sshow_llh, show_lineages = sshow_lineages, print_species = sprint_species, pv = p_value)
+		print("")
 		print("Final number of estimated species by GMYC: " +  repr(len(sp)) )
 	except ete2.parser.newick.NewickError:
 		print("Unexisting tree file or Malformed newick tree structure.")
