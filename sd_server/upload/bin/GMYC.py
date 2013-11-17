@@ -25,7 +25,7 @@ except ImportError:
 class um_tree:
 	def __init__(self, tree):
 		self.tree = Tree(tree, format = 1)
-		self.tree.resolve_polytomy(default_dist=0.000001, recursive=True)
+		#self.tree.resolve_polytomy(default_dist=0.000001, recursive=True)
 		self.tree.dist = 0
 		self.tree.add_feature("age", 0)
 		self.nodes = self.tree.get_descendants()
