@@ -11,6 +11,11 @@
         <p>
                 Click <a href = "/ptp/result/{{jobid}}">here</a> to refresh.
         </p>
+    {% elif result == "Something is wrong, please check your input file" %}
+        <p>
+                {{ result }}
+                
+        </p>
     {% else %}
         <p>
             Maximal likelihood solution:
@@ -47,6 +52,9 @@
         </p>
         <p>
             <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPllh.txt">Download likelihood trace file.</a>
+        </p>
+        <p>
+            <a href = "{{ MEDIA_URL }}{{jobid}}/output.llh.pdf">Download likelihood trace plot in pdf.</a>
         </p>
         <p>
             <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPPartitonSummary.txt">Download delimitation summary.</a>

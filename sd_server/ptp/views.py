@@ -75,12 +75,17 @@ def show_ptp_result(request, job_id, email = ""):
     out_path = settings.MEDIA_ROOT + job_id + "/output"
     with open(out_path) as outfile:
         lines = outfile.readlines()
-        if len(lines) > 5:
-            results="<br>".join(lines)
-            context = {'result':results, 'jobid':job_id, 'email':email}
-            return render(request, 'ptp/results.html', context)
-        else:
-            return render(request, 'ptp/results.html', {'result':"Job still running", 'jobid':job_id, 'email':email})
+        with open(out_path + ".err") as outfile2:
+            lines2 = outfile2.readline()
+            if len(lines) > 5:
+                results="<br>".join(lines)
+                context = {'result':results, 'jobid':job_id, 'email':email}
+                return render(request, 'ptp/results.html', context)
+            else:
+                if len(lines2) > 2:
+                    return render(request, 'ptp/results.html', {'result':"Something is wrong, please check your input file", 'jobid':job_id, 'email':email})
+                else:
+                    return render(request, 'ptp/results.html', {'result':"Job still running", 'jobid':job_id, 'email':email})
 
 
 def handle_uploaded_file(fin, fout):
