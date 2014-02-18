@@ -1,0 +1,58 @@
+# Most supported partition found by simple heuristic search
+Species 1 (support = 1.000)
+     a52
+
+Species 2 (support = 0.747)
+     a51_con,a358,a344
+
+Species 3 (support = 0.758)
+     a53,a54,a297,a55
+
+Species 4 (support = 0.769)
+     a354,a304_con
+
+Species 5 (support = 0.615)
+     a76,a130,a1,a73,a78,a4,a313,a318,a208,a212,a36,a127,a61,a214,a71,a159,a8,a169,a40,a173
+
+Species 6 (support = 0.868)
+     a334_con
+
+Species 7 (support = 0.956)
+     a337
+
+Species 8 (support = 0.956)
+     a336
+
+Species 9 (support = 0.462)
+     a124,a355
+
+Species 10 (support = 0.670)
+     a31
+
+Species 11 (support = 0.901)
+     a2455
+
+Species 12 (support = 0.692)
+     a10
+
+Species 13 (support = 0.593)
+     a205
+
+Species 14 (support = 0.396)
+     a20_con,a339
+
+Species 15 (support = 0.253)
+     a14,a13,a82
+
+Species 16 (support = 0.396)
+     a22,a109_con,a324,a33,a38,a323,a28,a5
+
+Species 17 (support = 0.473)
+     a120,a59
+
+Species 18 (support = 0.286)
+     a1277,a1263,a2457,a2091
+
+Species 19 (support = 0.462)
+     a1244,a1242
+

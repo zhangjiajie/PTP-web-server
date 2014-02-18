@@ -1,0 +1,18 @@
+Running MCMC sampling on tree 1:
+MCMC generation: 10000
+MCMC generation: 20000
+MCMC generation: 30000
+MCMC generation: 40000
+MCMC generation: 50000
+MCMC generation: 60000
+MCMC generation: 70000
+MCMC generation: 80000
+MCMC generation: 90000
+MCMC generation: 100000
+Accptance rate: 0.2968
+Merge: 49605
+Split: 49922
+
+Estimated number of species is between 1 and 7
+Mean: 4.34
+

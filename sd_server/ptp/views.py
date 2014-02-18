@@ -8,17 +8,27 @@ from subprocess import Popen
 import os
 
 class PTPForm(forms.Form):
-    treefile = forms.FileField(label='My phylogenetic input tree:')
+    treefile = forms.FileField(label="""My phylogenetic input tree (Simple Newick format or NEXUS format with no annotations on the tree), 
+    if input file contains multiple trees, only the first tree will be used:""")
     rooted = forms.ChoiceField(choices = (("untrooted", "Unrooted"), ("rooted", "Rooted")), label = 'My tree is:')
-    pvalue = forms.DecimalField(label = 'P-value:', initial = 0.001)
-    #sender = forms.EmailField(label='My e-mail address:')
+    #pvalue = forms.DecimalField(label = 'P-value:', initial = 0.001)
+    nmcmc = forms.IntegerField(label = "No. MCMC runs:", initial = 100000, max_value = 500000, min_value = 10000)
+    imcmc = forms.IntegerField(label = "Thinning:", initial = 100, max_value = 1000, min_value = 100)
+    burnin = forms.DecimalField(label = 'Burn-in:', initial = 0.1, max_value = 0.5, min_value = 0.09)
+    seed = forms.IntegerField(label = "Seed:", initial = 123)
+    outgroups = forms.CharField(label = "Outgroup taxa names(if any):", required=False, help_text = "e.g. t1 t2 t3" )
+    removeog = forms.BooleanField(label = "Remove outgroups(if any):", required=False)
+    sender = forms.EmailField(label='My e-mail address:')
+
 
 def index(request):
     context = {}
     return render(request, 'index.html', context)
 
+
 def thanks(request):
     return HttpResponse("Thanks for using our service!")
+
 
 def ptp_index(request):
     if request.method == 'POST': # If the form has been submitted...
@@ -26,8 +36,7 @@ def ptp_index(request):
         if ptp_form.is_valid(): # All validation rules pass
             # Process the data in form.cleaned_data
             job = Jobs()
-            #job.email = ptp_form.cleaned_data['sender']
-            job.email = "noemail@noemail.com"
+            job.email = ptp_form.cleaned_data['sender']
             if ptp_form.cleaned_data['rooted'] == "rooted":
                 job.data_type = "rptree"
             else:
@@ -40,39 +49,68 @@ def ptp_index(request):
             handle_uploaded_file(fin = request.FILES['treefile'] , fout = newfilename)
             job.filepath = filepath
             job.save()
-            pvalue = ptp_form.cleaned_data['pvalue']
-            os.chmod(filepath, 0777)
+            
+            nmcmc = ptp_form.cleaned_data['nmcmc']
+            imcmc = ptp_form.cleaned_data['imcmc']
+            burnin = ptp_form.cleaned_data['burnin']
+            seed = ptp_form.cleaned_data['seed']
+            outgroups = ptp_form.cleaned_data['outgroups']
+            removeog = ptp_form.cleaned_data['removeog']
+            
+            #os.chmod(filepath, 0777)
             if ptp_form.cleaned_data['rooted'] == "rooted":
-                run_ptp(fin = newfilename, fout = filepath + "output.txt", rooted = True, pv = pvalue)
+                run_ptp(fin = newfilename, fout = filepath + "output", rooted = True, nmcmc = nmcmc, imcmc = imcmc, burnin = burnin, seed = seed, outgroup = outgroups, remove = removeog)
             else:
-                run_ptp(fin = newfilename, fout = filepath + "output.txt", rooted = False, pv = pvalue)
+                run_ptp(fin = newfilename, fout = filepath + "output", rooted = False, nmcmc = nmcmc, imcmc = imcmc, burnin = burnin, seed = seed, outgroup = outgroups, remove = removeog)
             
             #return HttpResponseRedirect('result/') # Redirect after POST
-            return show_ptp_result(request, job_id = repr(job.id))
+            return show_ptp_result(request, job_id = repr(job.id), email = job.email)
     else:
         ptp_form = PTPForm() # An unbound form
     context = {'pform':ptp_form}
     return render(request, 'ptp/index.html', context)
 
-def show_ptp_result(request, job_id):
-    out_path = settings.MEDIA_ROOT + job_id + "/output.txt"
+
+def show_ptp_result(request, job_id, email = ""):
+    out_path = settings.MEDIA_ROOT + job_id + "/output"
     with open(out_path) as outfile:
         lines = outfile.readlines()
         if len(lines) > 5:
             results="<br>".join(lines)
-            context = {'result':results, 'jobid':job_id}
+            context = {'result':results, 'jobid':job_id, 'email':email}
             return render(request, 'ptp/results.html', context)
         else:
-            return render(request, 'ptp/results.html', {'result':"Job still running", 'jobid':job_id})
-     
+            return render(request, 'ptp/results.html', {'result':"Job still running", 'jobid':job_id, 'email':email})
+
 
 def handle_uploaded_file(fin, fout):
     with open(fout, 'w+') as destination:
         for chunk in fin.chunks():
             destination.write(chunk)
-            
-def run_ptp(fin, fout, rooted = False, pv = 0.001):
+
+
+def run_ptp(fin, fout, nmcmc, imcmc, burnin, seed, outgroup = "" , remove = False,  rooted = False):
     if rooted:
-        Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/PTP.py", "-t", fin, "-pvalue", str(pv), "-p"], stdout=open(fout, "w"), stderr=open(fout+".err", "w") )
+        if outgroup == "":
+            Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+            "-b", str(burnin), "-k", "1"], stdout=open(fout, "w"), stderr=open(fout+".err", "w"))
+        else:
+            if remove:
+                Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                "-b", str(burnin), "-g", outgroup, "-d", "-k", "1"], stdout=open(fout, "w"), stderr=open(fout+".err", "w"))
+            else:
+                Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                "-b", str(burnin), "-g", outgroup, "-k", "1"], stdout=open(fout, "w"), stderr=open(fout+".err", "w"))
     else:
-        Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/PTP.py", "-t", fin, "-pvalue", str(pv), "-p", "-r"], stdout=open(fout, "w"), stderr=open(fout+".err", "w"))
+        if outgroup == "":
+            Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+            "-b", str(burnin), "-r", "-k", "1"], stdout=open(fout, "w"), stderr=open(fout+".err", "w"))
+        else:
+            if remove:
+                Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                "-b", str(burnin), "-g", outgroup, "-d", "-k", "1"], stdout=open(fout, "w"), stderr=open(fout+".err", "w"))
+            else:
+                Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                "-b", str(burnin), "-g", outgroup, "-k", "1"], stdout=open(fout, "w"), stderr=open(fout+".err", "w"))
+            
+            

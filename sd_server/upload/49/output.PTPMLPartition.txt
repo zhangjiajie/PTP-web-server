@@ -1,0 +1,34 @@
+# Max likilhood partition 
+Species 1 (support = 1.000)
+     a52
+
+Species 2 (support = 0.758)
+     a53,a54,a297,a55
+
+Species 3 (support = 0.747)
+     a51_con,a358,a344
+
+Species 4 (support = 0.143)
+     a20_con,a339,a14,a13,a82,a124,a355,a31,a76,a130,a1,a73,a78,a4,a313,a318,a208,a212,a36,a127,a61,a214,a71,a159,a8,a169,a40,a173
+
+Species 5 (support = 0.769)
+     a354,a304_con
+
+Species 6 (support = 0.956)
+     a337
+
+Species 7 (support = 0.956)
+     a336
+
+Species 8 (support = 0.176)
+     a10,a205,a22,a109_con,a324,a33,a38,a323,a28,a5,a120,a59
+
+Species 9 (support = 0.868)
+     a334_con
+
+Species 10 (support = 0.901)
+     a2455
+
+Species 11 (support = 0.308)
+     a1277,a1263,a2457,a2091,a1244,a1242
+

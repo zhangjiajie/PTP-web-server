@@ -1,0 +1,13 @@
+# Max likilhood partition 
+Species 1 (support = 0.930)
+     C
+
+Species 2 (support = 0.821)
+     d1,d2
+
+Species 3 (support = 0.807)
+     e1,e2
+
+Species 4 (support = 0.709)
+     f1,f2
+

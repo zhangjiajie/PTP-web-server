@@ -13,11 +13,45 @@
         </p>
     {% else %}
         <p>
-            <img src="{{ MEDIA_URL }}{{jobid}}/input.tre.png" />
+            Maximal likelihood solution:
         </p>
         <p>
-            <a href = "{{ MEDIA_URL }}{{jobid}}/input.tre.pdf">Download output in PDF.</a>
+            <img src="{{ MEDIA_URL }}{{jobid}}/output.PTPMLPartition.txt.png" />
         </p>
+        <p>
+            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPMLPartition.txt.svg">Download output in SVG.</a>
+        </p>
+        <p>
+            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPMLPartition.txt">Download delimitation results.</a>
+        </p>
+        <p>
+            <hr />
+        </p>
+        <p>
+            Highest Bayesian supported solution:
+        </p>
+        <p>
+            <img src="{{ MEDIA_URL }}{{jobid}}/output.PTPhSupportPartition.txt.png" />
+        </p>
+        <p>
+            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPhSupportPartition.txt.svg">Download output in SVG.</a>
+        </p>
+        <p>
+            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPhSupportPartition.txt">Download delimitation results.</a>
+        </p>
+        <p>
+            <hr />
+        </p>
+        <p>
+            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPPartitions.txt">Download Bayesian results.</a>
+        </p>
+        <p>
+            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPllh.txt">Download likelihood trace file.</a>
+        </p>
+        <p>
+            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPPartitonSummary.txt">Download delimitation summary.</a>
+        </p>
+
         <p>
             {{ result|safe }}
         </p>

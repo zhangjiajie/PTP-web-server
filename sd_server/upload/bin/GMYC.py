@@ -14,6 +14,7 @@ try:
 	from scipy import stats
 	import matplotlib.pyplot as plt
 	from subprocess import call
+	from nexus import NexusReader
 except ImportError:
 	print("Please install the scipy, matplotlib package first.")
 	print("If your OS is ubuntu or has apt installed, you can try the following:") 
@@ -25,7 +26,7 @@ except ImportError:
 class um_tree:
 	def __init__(self, tree):
 		self.tree = Tree(tree, format = 1)
-		#self.tree.resolve_polytomy(default_dist=0.000001, recursive=True)
+		self.tree.resolve_polytomy(default_dist=0.000001, recursive=True)
 		self.tree.dist = 0
 		self.tree.add_feature("age", 0)
 		self.nodes = self.tree.get_descendants()
@@ -235,6 +236,29 @@ class um_tree:
 			for taxa in sp:
 				taxas = taxas + taxa.name + ", "
 			print("	" + taxas[:-1])
+	
+	
+	def output_species(self, taxa_order = []):
+		"""taxa_order is a list of taxa names, the paritions will be output as the same order"""
+		if len(taxa_order) == 0:
+			taxa_order = self.tree.get_leaf_names()
+		
+		num_taxa = 0
+		for sp in self.species_list:
+			for taxa in sp:
+				num_taxa = num_taxa + 1
+		if not len(taxa_order) == num_taxa:
+			print("error error, taxa_order != num_taxa!")
+			return None, None
+		else: 
+			partion = [-1] * num_taxa
+			cnt = 1
+			for sp in self.species_list:
+				for taxa in sp:
+					idx = taxa_order.index(taxa.name)
+					partion[idx] = cnt
+				cnt = cnt + 1
+			return taxa_order, partion
 
 
 	def num_lineages(self, wt_list):
@@ -695,7 +719,6 @@ def gmyc(tree, print_detail = False, show_tree = False, show_llh = False, show_l
 	print("Num spe:" + repr(best_num_spe))
 	print("Null llh:" + repr(null_logl))
 	print("P-value:" + repr(lrt.get_p_value()))
-	print("")
 	
 	if show_lineages:
 		utree.num_lineages(wt_list)
@@ -720,6 +743,52 @@ def gmyc(tree, print_detail = False, show_tree = False, show_llh = False, show_l
 		return one_spe
 	else:
 		return spes
+
+
+def gmyc_func(tree, taxa_order, print_detail = False, show_tree = False, show_llh = False, show_lineages = False, print_species = False, pv = 0.01):
+	llh_list = []
+	min_change = 0.1
+	max_iters = 100
+	best_llh = float("-inf")
+	best_num_spe = -1
+	best_node = None
+	utree = um_tree(tree)
+	for tnode in utree.nodes:
+		wt_list, num_spe = utree.get_waiting_times(threshold_node = tnode)
+		tt = tree_time(wt_list, num_spe)
+		last_llh = float("-inf")
+		change = float("inf")
+		cnt = 0
+		
+		while change > min_change and cnt < max_iters:
+			cnt = cnt + 1
+			para, nn, cc = fmin_l_bfgs_b(tar_fun, [1, 1], args = [tt], bounds = [[0, 10], [0, 10]], approx_grad = True)
+			#para, nn, cc = fmin_tnc(tar_fun, [0, 0], args = [tt], disp = False, bounds = [[0, 10], [0, 10]], approx_grad = True)
+			tt.update(para[0], para[1])
+			logl = tt.sum_llh()
+			change = abs(logl - last_llh)
+			last_llh = logl
+		
+		final_llh = tt.sum_llh()
+		if final_llh > best_llh:
+			best_llh = final_llh
+			best_num_spe = num_spe
+			best_node = tnode
+		llh_list.append(final_llh)
+	
+	null_logl = optimize_null_model(utree)
+	
+	wt_list, num_spe = utree.get_waiting_times(threshold_node = best_node)
+	one_spe, spes = utree.get_species()
+	t_order, partion = utree.output_species(taxa_order = taxa_order)
+	
+	lrt = lh_ratio_test(null_llh = null_logl, llh = best_llh, df = 2)
+	
+	print lrt.get_p_value()
+	if lrt.get_p_value() >= pv:
+		return [1] * len(one_spe[0])
+	else:
+		return partion
 
 
 def call_upgma(fin):
@@ -751,7 +820,6 @@ def print_options():
 
 
 if __name__ == "__main__":
-	"""
 	print("This is pGMYC - a python implementation of GMYC model for species delimitation.")
 	print("Version 1.1 released by Jiajie Zhang on 10-11-2013\n")
 	print("This program will delimit species on a rooted ultrametric tree, ")
@@ -768,7 +836,6 @@ if __name__ == "__main__":
 	print("--If you found pGMYC is useful to your research. \n")
 	print("Questions and bug reports, please send to:")
 	print("bestzhangjiajie@gmail.com\n")
-	"""
 	if len(sys.argv) < 3: 
 		print_options()
 		sys.exit()
@@ -827,8 +894,15 @@ if __name__ == "__main__":
 		sys.exit()
 	
 	try:
+		treetest = open(stree)
+		l1 = treetest.readline()
+		if l1.strip() == "#NEXUS":
+			nexus = NexusReader(stree)
+			nexus.blocks['trees'].detranslate()
+			stree = nexus.trees.trees[0] 
+		treetest.close()
+		
 		sp = gmyc(tree = stree, print_detail = sprint_detail, show_tree = sshow_tree, show_llh = sshow_llh, show_lineages = sshow_lineages, print_species = sprint_species, pv = p_value)
-		print("")
 		print("Final number of estimated species by GMYC: " +  repr(len(sp)) )
 	except ete2.parser.newick.NewickError:
 		print("Unexisting tree file or Malformed newick tree structure.")

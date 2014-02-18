@@ -1,0 +1,39 @@
+Running MCMC sampling on tree 1:
+MCMC generation: 10000
+Accptance rate: 0.2421
+Merge: 5042
+Split: 4958
+
+Estimated number of species is between 11 and 19
+Mean: 13.97
+
+bPTP finished running with the following parameters:
+ Input tree:...................../home/zhangje/GIT/sd_web/sd_server/upload/45/input.tre
+ MCMC iterations:................10000
+ MCMC sampling interval:.........100
+ MCMC burn-in:...................0.10
+ MCMC seed:......................123
+
+ MCMC samples written to:
+  /home/zhangje/GIT/sd_web/sd_server/upload/45/output.PTPPartitions.txt
+
+ Posterial LLH written to:
+  /home/zhangje/GIT/sd_web/sd_server/upload/45/output.PTPllh.txt
+
+ Posterial LLH plot:
+  /home/zhangje/GIT/sd_web/sd_server/upload/45/output.llh.png
+
+ Posterial Prob. of partitions written to:
+  /home/zhangje/GIT/sd_web/sd_server/upload/45/output.PTPPartitonSummary.txt
+
+ Highest posterial Prob. supported partition written to:
+  /home/zhangje/GIT/sd_web/sd_server/upload/45/output.PTPhSupportPartition.txt
+  Tree plot written to:
+  /home/zhangje/GIT/sd_web/sd_server/upload/45/output.PTPhSupportPartition.txt.png
+  /home/zhangje/GIT/sd_web/sd_server/upload/45/output.PTPhSupportPartition.txt.svg
+
+ Max LLH partition written to:
+  /home/zhangje/GIT/sd_web/sd_server/upload/45/output.PTPMLPartition.txt
+  Tree plot written to:
+  /home/zhangje/GIT/sd_web/sd_server/upload/45/output.PTPMLPartition.txt.png
+  /home/zhangje/GIT/sd_web/sd_server/upload/45/output.PTPMLPartition.txt.svg
