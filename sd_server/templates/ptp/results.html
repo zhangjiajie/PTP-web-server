@@ -5,11 +5,11 @@
     </div>
     {% if result == "Job still running"  %}
         <p>
-                {{ result }}
+                {{ result }}, you job id is <b>{{jobid}}</b> - you can use your job id and e-mail address to find your results later.
                 
         </p>
         <p>
-                Click <a href = "/ptp/result/{{jobid}}">here</a> to refresh.
+                Click <a href = "/ptp/result/?job_id={{jobid}}&email={{email}}">here</a> to refresh.
         </p>
     {% elif result == "Something is wrong, please check your input file" %}
         <p>
@@ -24,10 +24,10 @@
             <img src="{{ MEDIA_URL }}{{jobid}}/output.PTPMLPartition.txt.png" />
         </p>
         <p>
-            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPMLPartition.txt.svg">Download output in SVG.</a>
+            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPMLPartition.txt.svg">Download output in SVG</a>
         </p>
         <p>
-            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPMLPartition.txt">Download delimitation results.</a>
+            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPMLPartition.txt">Download delimitation results</a>
         </p>
         <p>
             <hr />
@@ -39,25 +39,25 @@
             <img src="{{ MEDIA_URL }}{{jobid}}/output.PTPhSupportPartition.txt.png" />
         </p>
         <p>
-            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPhSupportPartition.txt.svg">Download output in SVG.</a>
+            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPhSupportPartition.txt.svg">Download output in SVG</a>
         </p>
         <p>
-            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPhSupportPartition.txt">Download delimitation results.</a>
+            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPhSupportPartition.txt">Download delimitation results</a>
         </p>
         <p>
             <hr />
         </p>
         <p>
-            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPPartitions.txt">Download Bayesian results.</a>
+            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPPartitions.txt">Download Bayesian results</a>
         </p>
         <p>
-            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPllh.txt">Download likelihood trace file.</a>
+            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPllh.txt">Download likelihood trace file</a>
         </p>
         <p>
-            <a href = "{{ MEDIA_URL }}{{jobid}}/output.llh.pdf">Download likelihood trace plot in pdf.</a>
+            <a href = "{{ MEDIA_URL }}{{jobid}}/output.llh.pdf">Download likelihood trace plot in pdf</a>
         </p>
         <p>
-            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPPartitonSummary.txt">Download delimitation summary.</a>
+            <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPPartitonSummary.txt">Download delimitation summary</a>
         </p>
 
         <p>
