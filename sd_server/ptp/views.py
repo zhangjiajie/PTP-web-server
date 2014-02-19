@@ -70,6 +70,7 @@ def findjob(request):
     context = {'jform':jform}
     return render(request, 'ptp/findjob.html', context)
 
+
 def ptp_index(request):
     if request.method == 'POST': # If the form has been submitted...
         ptp_form = PTPForm(request.POST, request.FILES) # A form bound to the POST data
@@ -125,19 +126,22 @@ def show_ptp_result(request, job_id = "", email = ""):
         return autherror(request)
     
     out_path = settings.MEDIA_ROOT + job_id + "/output"
-    with open(out_path) as outfile:
-        lines = outfile.readlines()
+    outpar = settings.MEDIA_ROOT + job_id +"/output.PTPPartitonSummary.txt"
+    outplot = settings.MEDIA_ROOT + job_id + "/output.PTPhSupportPartition.txt.png"
+    
+    if os.path.exists(outpar) and os.path.exists(outplot):
+        with open(out_path) as outfile:
+            lines = outfile.readlines()
+            results="<br>".join(lines)
+            context = {'result':results, 'jobid':job_id, 'email':email}
+            return render(request, 'ptp/results.html', context)
+    else:
         with open(out_path + ".err") as outfile2:
             lines2 = outfile2.readlines()
-            if len(lines) > 5:
-                results="<br>".join(lines)
-                context = {'result':results, 'jobid':job_id, 'email':email}
-                return render(request, 'ptp/results.html', context)
+            if len(lines2) > 3:
+                return render(request, 'ptp/results.html', {'result':"Something is wrong, please check your input file", 'jobid':job_id, 'email':email})
             else:
-                if len(lines2) > 3:
-                    return render(request, 'ptp/results.html', {'result':"Something is wrong, please check your input file", 'jobid':job_id, 'email':email})
-                else:
-                    return render(request, 'ptp/results.html', {'result':"Job still running", 'jobid':job_id, 'email':email})
+                return render(request, 'ptp/results.html', {'result':"Job still running", 'jobid':job_id, 'email':email})
 
 
 def handle_uploaded_file(fin, fout):

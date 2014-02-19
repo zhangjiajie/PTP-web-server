@@ -9,14 +9,19 @@
                 
         </p>
         <p>
-                Click <a href = "/gmyc/result/{{jobid}}">here</a> to refresh.
+                Click <a href = "/gmyc/result/?job_id={{jobid}}&email={{email}}">here</a> to refresh.
+        </p>
+    {% elif result == "Something is wrong, please check your input file" %}
+        <p>
+                {{ result }}
+                
         </p>
     {% else %}
         <p>
-            <img src="{{ MEDIA_URL }}{{jobid}}/input.tre.png" />
+            <img src="{{ MEDIA_URL }}{{jobid}}/input.tre_plot.png" />
         </p>
         <p>
-            <a href = "{{ MEDIA_URL }}{{jobid}}/input.tre.pdf">Download output in PDF.</a>
+            <a href = "{{ MEDIA_URL }}{{jobid}}/input.tre_plot.png">Download output in PDF.</a>
         </p>
         <p>
             {{ result|safe }}

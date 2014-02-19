@@ -1,25 +1,27 @@
 {% extends "gmyc/base.html" %}
 {% block forms %}
-    <div class="alert alert-info">
-        <h4>I have an ultrametric bifurcating tree</h4>
-    </div>
     <div class = "bd-4">
         <p>
-        This is a web interface for single threshold <a href = "http://sysbio.oxfordjournals.org/content/62/5/707">GMYC model</a> implemented 
-        in Python. Please cite: <br />
-        <a href = "http://bioinformatics.oxfordjournals.org/content/29/22/2869">
-        <b>A General Species Delimitation Method with Applications to Phylogenetic Placements.</b> 
-        <b>Zhang, Jiajie, Kapli, P., Pavlidis, P., and Stamatakis, A.</b> 
-        <i>Bioinformatics (Oxford, England)(2013), 29 (22): 2869-2876</i> 
-        </a> <br />
-        if you find it is useful to your research.
+         <h4>Web interface for single and multiple threshold GMYC</h4>
+        
+        <p>
+        The backend of this web server runs the original <a href = "http://barralab.bio.ic.ac.uk/downloads.html"> R implementation</a>
+        of the <a href = "http://sysbio.oxfordjournals.org/content/62/5/707">GMYC model</a> authored by Tomochika Fujisawa and Tim Barraclough.
+        To run the R GMYC locally, please check <a href = "http://tmfujis.wordpress.com/2013/04/23/how-to-run-gmyc/">Tomochika Fujisawa's blog</a>.
+        There is also a python implementation of the single threshold GMYC model in my <a href="https://github.com/zhangjiajie/SpeciesCounting">GitHub repository</a>, 
+        and <a href = "http://www.biomedcentral.com/1471-2148/12/196">a Bayesian implementation of the single threshold GMYC in R</a> by 
+        <a href = https://sites.google.com/site/noahmreid/>Noah M. Reid</a>. 
+        
         </p>
         <p>
-            You can find the python implementation of the single threshold GMYC model in my <a href="https://github.com/zhangjiajie/SpeciesCounting">GitHub repository</a>.
-            I encourage you to try the original <a href = "http://barralab.bio.ic.ac.uk/downloads.html"> R implementation</a>, 
-            it has much richer features and has been widely used and tested.
-            Be aware the results from Python and R implementation might differ slightly, this is due to different ways of parameter optimizations. 
-            Also note the input tree should be strictly ultrametric and bifurcating (with no zero branch lengths).
+        I encourage you to try both GMYC and <a href = "/ptp/">PTP model</a> on your data. They are based on quite different models, but 
+        if they give you similar delimitations, you can be more confident on the results.
+        </p>
+        
+        <h5>
+            Note the input tree should be strictly ultrametric and bifurcating and with no zero branch lengths (google BEAST or r8s if you do not know how to do it), 
+            if you have un-time-calibrated phylogenetic trees, please use <a href = "/ptp/">PTP model</a>.
+        </h5>
         </p>
         
     </div>
