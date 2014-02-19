@@ -187,6 +187,8 @@ class bayesianptp:
 	def remove_outgroups(self, ognames, remove = False):
 		"""reroot using outgroups and remove them"""
 		self.reroot = False
+		if len(ognames) == 1:
+			ognames = ognames[0].split() 
 		try:
 			if remove:
 				for og in ognames:

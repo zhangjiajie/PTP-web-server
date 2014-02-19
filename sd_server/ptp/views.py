@@ -21,6 +21,11 @@ class PTPForm(forms.Form):
     sender = forms.EmailField(label='My e-mail address:')
 
 
+class jobform(forms.Form):
+    job_id = forms.IntegerField(label = "Job id:")
+    sender = forms.EmailField(label='E-mail address:')
+
+
 def index(request):
     context = {}
     return render(request, 'index.html', context)
@@ -29,6 +34,41 @@ def index(request):
 def thanks(request):
     return HttpResponse("Thanks for using our service!")
 
+
+def autherror(request):
+    return HttpResponse("Job id does not exists or e-mail address does not match!")
+
+
+def findjob(request):
+    if request.method == 'POST': # If the form has been submitted...
+        jform = jobform(request.POST)
+        if jform.is_valid():
+            email = jform.cleaned_data['sender']
+            job_id = jform.cleaned_data['job_id']
+            jobs = Jobs.objects.filter(id=job_id)
+            if len(jobs) > 0:
+                if jobs[0].email != email:
+                    return autherror(request)
+            else:
+                return autherror(request)
+            out_path = settings.MEDIA_ROOT + str(job_id) + "/output"
+            with open(out_path) as outfile:
+                lines = outfile.readlines()
+                with open(out_path + ".err") as outfile2:
+                    lines2 = outfile2.readlines()
+                    if len(lines) > 5:
+                        results="<br>".join(lines)
+                        context = {'result':results, 'jobid':job_id, 'email':email}
+                        return render(request, 'ptp/results.html', context)
+                    else:
+                        if len(lines2) > 3:
+                            return render(request, 'ptp/results.html', {'result':"Something is wrong, please check your input file", 'jobid':job_id, 'email':email})
+                        else:
+                            return render(request, 'ptp/results.html', {'result':"Job still running", 'jobid':job_id, 'email':email})
+    else:
+        jform = jobform()
+    context = {'jform':jform}
+    return render(request, 'ptp/findjob.html', context)
 
 def ptp_index(request):
     if request.method == 'POST': # If the form has been submitted...
@@ -54,7 +94,8 @@ def ptp_index(request):
             imcmc = ptp_form.cleaned_data['imcmc']
             burnin = ptp_form.cleaned_data['burnin']
             seed = ptp_form.cleaned_data['seed']
-            outgroups = ptp_form.cleaned_data['outgroups']
+            outgroups = ptp_form.cleaned_data['outgroups'].strip()
+            print(outgroups)
             removeog = ptp_form.cleaned_data['removeog']
             
             #os.chmod(filepath, 0777)
@@ -71,18 +112,29 @@ def ptp_index(request):
     return render(request, 'ptp/index.html', context)
 
 
-def show_ptp_result(request, job_id, email = ""):
+def show_ptp_result(request, job_id = "", email = ""):
+    if job_id == "" or email == "":
+        job_id = request.GET.get('job_id', '')
+        email = request.GET.get('email', '')
+    
+    jobs = Jobs.objects.filter(id=job_id)
+    if len(jobs) > 0:
+        if jobs[0].email != email:
+            return autherror(request)
+    else:
+        return autherror(request)
+    
     out_path = settings.MEDIA_ROOT + job_id + "/output"
     with open(out_path) as outfile:
         lines = outfile.readlines()
         with open(out_path + ".err") as outfile2:
-            lines2 = outfile2.readline()
+            lines2 = outfile2.readlines()
             if len(lines) > 5:
                 results="<br>".join(lines)
                 context = {'result':results, 'jobid':job_id, 'email':email}
                 return render(request, 'ptp/results.html', context)
             else:
-                if len(lines2) > 2:
+                if len(lines2) > 3:
                     return render(request, 'ptp/results.html', {'result':"Something is wrong, please check your input file", 'jobid':job_id, 'email':email})
                 else:
                     return render(request, 'ptp/results.html', {'result':"Job still running", 'jobid':job_id, 'email':email})
@@ -95,6 +147,7 @@ def handle_uploaded_file(fin, fout):
 
 
 def run_ptp(fin, fout, nmcmc, imcmc, burnin, seed, outgroup = "" , remove = False,  rooted = False):
+    print(outgroup)
     if rooted:
         if outgroup == "":
             Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
