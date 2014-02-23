@@ -10,15 +10,22 @@ import os
 class PTPForm(forms.Form):
     treefile = forms.FileField(label="""My phylogenetic input tree (Simple Newick format or NEXUS format with no annotations on the tree), 
     if input file contains multiple trees, only the first tree will be used:""")
-    rooted = forms.ChoiceField(choices = (("untrooted", "Unrooted"), ("rooted", "Rooted")), label = 'My tree is:')
+    rooted = forms.ChoiceField(choices = (("untrooted", "Unrooted"), ("rooted", "Rooted")), label = 'My tree is:',
+                                help_text = "If unrooted, the tree will be rooted at the longest branch.")
     #pvalue = forms.DecimalField(label = 'P-value:', initial = 0.001)
-    nmcmc = forms.IntegerField(label = "No. MCMC runs:", initial = 100000, max_value = 500000, min_value = 10000)
+    nmcmc = forms.IntegerField(label = "No. MCMC generations:", initial = 100000, max_value = 500000, min_value = 10000,
+                                help_text = """For small trees (<50 taxa), 100000 is usually enough, but you should always check for convergence.""")
     imcmc = forms.IntegerField(label = "Thinning:", initial = 100, max_value = 1000, min_value = 100)
-    burnin = forms.DecimalField(label = 'Burn-in:', initial = 0.1, max_value = 0.5, min_value = 0.09)
-    seed = forms.IntegerField(label = "Seed:", initial = 123)
-    outgroups = forms.CharField(label = "Outgroup taxa names(if any):", required=False, help_text = "e.g. t1 t2 t3" )
-    removeog = forms.BooleanField(label = "Remove outgroups(if any):", required=False)
-    sender = forms.EmailField(label='My e-mail address:')
+    burnin = forms.DecimalField(label = 'Burn-in:', initial = 0.1, max_value = 0.5, min_value = 0.09,
+                                help_text = "Always check if more burn-in is needed.")
+    seed = forms.IntegerField(label = "Seed:", initial = 123, 
+                                help_text = "Change the seed if MCMC chains does not converge.")
+    outgroups = forms.CharField(label = "Outgroup taxa names(if any):", required=False, 
+                                help_text = "e.g. t1 t2 t3, taxa name sperated by a single space, if specified, the tree will be rerooted accordingly." )
+    removeog = forms.BooleanField(label = "Remove outgroups(if any):", required=False,
+                                help_text = "Remove outgroups that are distant related can improve the delimitation results.")
+    sender = forms.EmailField(label='My e-mail address:',
+                                help_text = "You can use it to find your results later.")
 
 
 class jobform(forms.Form):
@@ -29,6 +36,11 @@ class jobform(forms.Form):
 def index(request):
     context = {}
     return render(request, 'index.html', context)
+
+
+def help1(request):
+    context = {}
+    return render(request, 'ptp/help.html', context)
 
 
 def thanks(request):
