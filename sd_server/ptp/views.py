@@ -8,7 +8,7 @@ from subprocess import Popen
 import os
 
 class PTPForm(forms.Form):
-    treefile = forms.FileField(label="""My phylogenetic input tree (Simple Newick format or NEXUS format with no annotations on the tree), 
+    treefile = forms.FileField(label="""My phylogenetic input tree, 
     if input file contains multiple trees, only the first tree will be used:""")
     rooted = forms.ChoiceField(choices = (("untrooted", "Unrooted"), ("rooted", "Rooted")), label = 'My tree is:',
                                 help_text = "If unrooted, the tree will be rooted at the longest branch.")

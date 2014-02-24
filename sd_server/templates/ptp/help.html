@@ -1,7 +1,7 @@
 {% extends "ptp/base3.html" %}
 {% block forms %}
 <p>
-<b>1. What is PTP?</b>
+<b>1. What is PTP and bPTP?</b>
 </p>
 <p>
 PTP can give
@@ -14,7 +14,7 @@ branch lengths should represent number of mutations. Our numerous tests
 show PTP outperforms GMYC. More importantly, PTP is very easy to use, 
 since it can use the phylogenetic tree directly without the 
 difficult and error prone procedures of time calibration required by 
-GMYC. 
+GMYC. bPTP is a Bayesian implementation of the PTP model.
 </p>
 
 <p>
@@ -26,6 +26,18 @@ Want to use a web server? Try:
 <a href = http://embnet.vital-it.ch/raxml-bb/>http://embnet.vital-it.ch/raxml-bb/</a>
 or 
 <a href = http://www.atgc-montpellier.fr/phyml>http://www.atgc-montpellier.fr/phyml/</a>
+</p>
+<p>
+The server will only accept Newick format or NEXUS format with no annotations on the tree, the tree should be strictly bifurcating.<br />
+Here is an <a href = "/static/img/example.tre">example of Newick format</a> and an <a href = "/static/img/example.nex">example of NEXUS format</a>.
+</p>
+
+<p>
+<span style="color:red">
+<b>Special note on taxa name:</b>
+A valid taxa name should only contains letters, numbers, _ and -; and should NOT be pure numbers. 
+Any other characters, in particular space, $, #, %, ( and ),  will cause errors! 
+</span>
 </p>
 
 <p>
@@ -113,6 +125,7 @@ See question 6.
 </p>
 <p>
 This depends on your tree size and shape, plus the MCMC generation you specified.
+30 taxa and 100,000 generations needs only 1 min, 
 300 taxa and 500,000 generations might take no more than a few hours. 
 1000 taxa and 500,000 generations might take days and 5000 taxa might take weeks.
 </p>
@@ -148,5 +161,15 @@ Please cite:
         </a> 
 </p>
 
+
+<p>
+<b>
+11. Questions, bugs and suggestions?
+</b>
+</p>
+<p>
+Please post them on the <a href = "https://groups.google.com/forum/?hl=en#!forum/ptp-species-delimitation">Google group </a>.
+If you think there is a bug, please e-mail me your job id, e-mail address, the parameters you used to run the job, and attatch your input tree file.
+</p>
 
 {% endblock %}
