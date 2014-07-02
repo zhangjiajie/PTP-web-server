@@ -5,6 +5,7 @@ try:
 	import random
 	import argparse
 	import os
+	import subprocess
 	from ete2 import Tree
 	from nexus import NexusReader
 	from summary import partitionparser
@@ -184,11 +185,9 @@ class bayesianptp:
 		self.reroot = reroot
 	
 	
-	def remove_outgroups(self, ognames, remove = False):
+	def remove_outgroups(self, ognames, remove = False, output = ""):
 		"""reroot using outgroups and remove them"""
 		self.reroot = False
-		if len(ognames) == 1:
-			ognames = ognames[0].split() 
 		try:
 			if remove:
 				for og in ognames:
@@ -207,6 +206,10 @@ class bayesianptp:
 					if remove:
 						t.prune(self.taxa_order, preserve_branch_length=True)
 				self.trees[i] = t.write()
+			if remove and output!="":
+				with open(output, "w") as fout:
+					for t in self.trees:
+						fout.write(t + "\n") 
 		except ValueError, e:
 			print(e)
 			print("")
@@ -403,8 +406,11 @@ if __name__ == "__main__":
 	thinning = args.imcmc, sampling = args.nmcmc, burnin = args.burnin, 
 	firstktrees = args.num_trees)
 	
+	phylomap_tree = args.trees
 	if args.outgroups!= None and len(args.outgroups) > 0:
-		bbptp.remove_outgroups(args.outgroups, remove = args.delete)
+		bbptp.remove_outgroups(args.outgroups, remove = args.delete, output = args.trees + ".NoOutgroups")
+		if remove:
+			phylomap_tree = args.trees + ".NoOutgroups"
 	
 	pars, llhs, settings = bbptp.delimit()
 	
@@ -419,4 +425,10 @@ if __name__ == "__main__":
 	min_no_p, max_no_p, mean_no_p = pp.hpd_numpartitions()
 	print("Estimated number of species is between " + repr(min_no_p) + " and " + repr(max_no_p))
 	print("Mean: " + "{0:.2f}".format(mean_no_p))
-	#print_run_info(args, bbptp.numtrees)
+	basepath = os.path.dirname(os.path.abspath(__file__))
+	
+	subprocess.call(["python", basepath + "/phylomap.py",
+	"-t", phylomap_tree,
+	"-p", args.output + ".PTPMLPartition.txt",
+	"-o", args.output + ".phylomap",
+	"-s", str(args.seed)])

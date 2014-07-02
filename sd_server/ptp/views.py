@@ -156,6 +156,12 @@ def show_ptp_result(request, job_id = "", email = ""):
                 return render(request, 'ptp/results.html', {'result':"Job still running", 'jobid':job_id, 'email':email})
 
 
+def show_phylomap_result(request):
+    job_id = request.GET.get('job_id', '')
+    context = {'jobid':job_id}
+    return render(request, 'ptp/phylomap.html', context)
+
+
 def handle_uploaded_file(fin, fout):
     with open(fout, 'w+') as destination:
         for chunk in fin.chunks():
