@@ -5,6 +5,8 @@ from django.conf import settings
 from django import forms
 from models import Jobs
 from subprocess import Popen
+from subprocess import call
+import subprocess
 import os
 
 class PTPForm(forms.Form):
@@ -34,7 +36,10 @@ class jobform(forms.Form):
 
 
 def index(request):
-    context = {}
+    frees, totals = server_stats() 
+    print(frees)
+    print(total)
+    context = {'avaliable':frees, 'total':totals}
     return render(request, 'index.html', context)
 
 
@@ -84,6 +89,7 @@ def findjob(request):
 
 
 def ptp_index(request):
+    frees, totals = server_stats() 
     if request.method == 'POST': # If the form has been submitted...
         ptp_form = PTPForm(request.POST, request.FILES) # A form bound to the POST data
         if ptp_form.is_valid(): # All validation rules pass
@@ -121,7 +127,7 @@ def ptp_index(request):
             return show_ptp_result(request, job_id = repr(job.id), email = job.email)
     else:
         ptp_form = PTPForm() # An unbound form
-    context = {'pform':ptp_form}
+    context = {'pform':ptp_form, 'avaliable':frees, 'total':totals}
     return render(request, 'ptp/index.html', context)
 
 
@@ -194,3 +200,12 @@ def run_ptp(fin, fout, nmcmc, imcmc, burnin, seed, outgroup = "" , remove = Fals
                 "-b", str(burnin), "-g", outgroup, "-k", "1"], stdout=open(fout, "w"), stderr=open(fout+".err", "w"))
             
             
+def server_stats():
+    #return avaliable and total slots
+    p1 = Popen(['qstat', '-g', 'c'], stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+    stdout = p1.communicate()[0]
+    solines = stdout.split("\n")
+    sstats = solines[2].split()
+    return sstats[4], sstats[5]
+    
+
