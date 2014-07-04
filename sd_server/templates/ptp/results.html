@@ -1,7 +1,7 @@
 {% extends "ptp/base.html" %}
 {% block forms %}
     <div class="alert alert-info">
-        <h4>Results</h4>
+        <h4>PTP species delimitation results</h4>
     </div>
     {% if result == "Job still running"  %}
         <p>
@@ -19,7 +19,7 @@
         </p>
     {% else %}
         <p>
-            Maximal likelihood solution:
+            Maximum likelihood solution:
         </p>
         <p>
             <img src="{{ MEDIA_URL }}{{jobid}}/output.PTPMLPartition.txt.png" />
@@ -31,9 +31,6 @@
             <a href = "{{ MEDIA_URL }}{{jobid}}/output.PTPMLPartition.txt">Download delimitation results</a>
         </p>
         
-        <p>
-            <a href = "/ptp/phylomap/?job_id={{jobid}}&email={{email}}">Show PhyloMap visualization of the delimitation results</a>
-        </p>
         
         <p>
             <hr />
@@ -69,5 +66,16 @@
         <p>
             {{ result|safe }}
         </p>
+        
+        <p>
+           <hr /> 
+        </p>
+        <div class="alert alert-info">
+        <h4>PhyloMap-PTP</h4>
+        </div>
+        <p>
+            <a href = "/ptp/phylomap/?job_id={{jobid}}&email={{email}}">Show PhyloMap visualization of the maximum likelihood PTP species delimitation</a>
+        </p>
+        
     {% endif %}
 {% endblock %}

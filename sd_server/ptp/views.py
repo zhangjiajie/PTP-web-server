@@ -173,8 +173,18 @@ def show_ptp_result(request, job_id = "", email = ""):
 
 def show_phylomap_result(request):
     job_id = request.GET.get('job_id', '')
+    out_path_line = settings.MEDIA_ROOT + job_id + "/output.phylomap.line.txt"
+    out_path_var = settings.MEDIA_ROOT + job_id + "/output.phylomap.var"
     context = {'jobid':job_id}
-    return render(request, 'ptp/phylomap.html', context)
+    if os.path.exists(out_path_line):
+        if os.path.exists(out_path_var):
+            with open(out_path_var) as outfile:
+                lines = outfile.readlines()
+                results="<br>".join(lines)
+            context['result'] = results
+        return render(request, 'ptp/phylomap.html', context)
+    else:
+        return HttpResponse("PhyloMap result does not exist, please re-submit your job!")
 
 
 def handle_uploaded_file(fin, fout):
@@ -207,6 +217,7 @@ def run_ptp(fin, fout, nmcmc, imcmc, burnin, seed, outgroup = "" , remove = Fals
             else:
                 Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
                 "-b", str(burnin), "-g", outgroup, "-k", "1"], stdout=open(fout, "w"), stderr=open(fout+".err", "w"))
+
             
 def run_ptp_sge(fin, fout, nmcmc, imcmc, burnin, seed, outgroup = "" , remove = False,  rooted = False):
     command = ""
@@ -235,6 +246,7 @@ def run_ptp_sge(fin, fout, nmcmc, imcmc, burnin, seed, outgroup = "" , remove = 
     jobok = job_submission(fscript = sge_script)
     return jobok
 
+
 def server_stats():
     #return avaliable and total slots
     p1 = Popen(['qstat', '-g', 'c'], stdout = subprocess.PIPE, stderr = subprocess.PIPE)
@@ -242,6 +254,7 @@ def server_stats():
     solines = stdout.split("\n")
     sstats = solines[2].split()
     return sstats[4], sstats[5]
+
 
 def generate_sge_script(scommand, fout):
     with open(fout+".sge.sh", "w") as fsh:
@@ -252,6 +265,7 @@ def generate_sge_script(scommand, fout):
         fsh.write("#$ -v DISPLAY \n")
         fsh.write(scommand + "\n")
     return fout+".sge.sh"
+
     
 def job_submission(fscript):
     p1 = Popen(['qsub', fscript], stdout = subprocess.PIPE, stderr = subprocess.PIPE)

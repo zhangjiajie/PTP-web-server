@@ -225,6 +225,10 @@ class phylomap:
         for i in range(len(self.taxaorder)):
             tname = self.taxaorder[i].name
             self.name_coords[tname] = [ppm[0][i], ppm[1][i]]
+        sumev = 0
+        for evv in ev:
+            sumev += abs(evv)
+        return ev[0]/sumev, ev[1]/sumev
     
     
     def extract_species_tree(self):
@@ -354,12 +358,14 @@ class phylomap:
 
 
     def mapping(self):
-        self.pcoa()
+        ev1, ev2 = self.pcoa()
         self.parse_delimitation()
         self.extract_species_tree()
         mapping_err = self.calculate_errors()
-        print("init error = " + repr(mapping_err))
-        
+        #print("init error = " + repr(mapping_err))
+        with open(self.fout + ".var", "w") as fvar:
+            fvar.write("Variance explained by first axis: {0:.2f} %".format(ev1 * 100) + "\n")
+            fvar.write("Variance explained by second axis: {0:.2f} %".format(ev2 * 100) + "\n")
         improve_cnt = 0
         last_mapping_err = mapping_err
         index = range(len(self.inner_node_names))
@@ -382,7 +388,7 @@ class phylomap:
                 break
             if self.debug:
                 print("error after iteration " + repr(i) + ": " + repr(mapping_err))
-        print("error after iteration " + repr(i) + ": " + repr(mapping_err))
+        #print("error after iteration " + repr(i) + ": " + repr(mapping_err))
         self.output_branches()
 
 

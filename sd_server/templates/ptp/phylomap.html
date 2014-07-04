@@ -18,7 +18,7 @@
         padding: 9px 0;
       }
       .bd-4 {
-          border: 2px solid DarkViolet;
+          border: 2px solid DarkOliveGreen;
           padding: 10px;
           margin-top: 5px
       }
@@ -99,12 +99,46 @@
         </div>
       
         <div class="span9">
-            <h4>PhyloMap visualization of PTP species delimitation results</h4> 
+            <h4>PhyloMap-PTP: PhyloMap visualization of PTP species delimitation result</h4> 
             <canvas id="phylomap_sketch" data-processing-sources="/static/js/phylomap.pde"></canvas>
             <p>
                 <button type="button" onclick="save_screen('phylomap_sketch')">Save Screen</button>
                 <button type="button" onclick="clear_screen('phylomap_sketch')">Clear Screen</button>
             </p>
+            <p>
+                Usage: Move mouse cursor on the data point to show the taxa name; 
+                       Click the left mouse button to show all taxa name belong to this species;
+                       Click the right mouse button to fix the taxa name on screen;
+                       Press C to clear all taxa names on screen;
+                       Press S to save the screen.
+            </p>
+            <p>
+            {{ result|safe }}
+            </p>
+            
+            <div class = "bd-4">
+                <h4>What is PhyloMap-PTP and how to interpret the results </h4>
+                <p> Principal Coordinates Analysis (PCoA) has been widely used in species delimitation exercises. Google "pcoa species delimitation" in google scholar, there will 
+                be many examples. PhyloMap-PTP is a visualization tool that combines PCoA, PTP and species tree mapping. The original PhyloMap can be find here: <a href = "http://www.biomedcentral.com/1471-2105/12/248"> 
+                "J. Zhang, A. M. Mamlouk, 
+                T. Martinetz, S. Chang, J. Wang, and R. Hilgenfeld. PhyloMap: an algorithm for visualizing relationships of large sequence data sets and its application to the 
+                influenza A virus genome. BMC bioinformatics, 12:248, Jan. 2011." 
+                </a>
+                PhyloMap-PTP replaces the "Neural-Gas" clustering in the original paper with PTP results. It also avaliable as a standalone version <a href = "https://github.com/zhangjiajie/SpeciesCounting">here</a>. 
+                </p>    
+                
+                <p>
+                    Each circle in the plot represents a taxa, different species are colored differently. The species tree was mapped onto the plot, 
+                    one random taxa was chosen from each species as a representative for that species (the leaf node of the mapped species tree.) 
+                    In the species tree, thicker line means the branch length in the original species tree is longer than the branch in the PhyloMap plot.
+                    The horizontal axis is the first axis, and the vertial axis is the second axis. Each axis explains certain amount of variance of the 
+                    data set. Sometimes, the first axis only separate outgroup taxa from other neighboring taxa, this suggests it might be better to remove the 
+                    outgroups and rerun the analysis. Note that, neighboring taxa in the PCoA might not really close to each other. Their true distances 
+                    should be measured alone the branches connecting them.
+                     
+                </p>   
+            </div>    
+            
         </div><!--/span-->
       </div><!--/row-->
 

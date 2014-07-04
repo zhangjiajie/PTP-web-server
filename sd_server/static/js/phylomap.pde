@@ -6,8 +6,8 @@ ArrayList tb_list = new ArrayList();
 boolean curr_lock = false;
 int Xrange = screen.width * 0.7;
 int Yrange = screen.height * 0.7;
-int text_size = 15;
-int radiuss = 10;
+int text_size = 10;
+int radiuss = 7;
 
 void setup(){
         if(Yrange > Xrange){Yrange = Xrange;}
