@@ -116,7 +116,7 @@ def ptp_index(request):
             burnin = ptp_form.cleaned_data['burnin']
             seed = ptp_form.cleaned_data['seed']
             outgroups = ptp_form.cleaned_data['outgroups'].strip()
-            print(outgroups)
+            #print(outgroups)
             removeog = ptp_form.cleaned_data['removeog']
             
             #os.chmod(filepath, 0777)

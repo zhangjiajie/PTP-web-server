@@ -409,7 +409,7 @@ if __name__ == "__main__":
 	phylomap_tree = args.trees
 	if args.outgroups!= None and len(args.outgroups) > 0:
 		bbptp.remove_outgroups(args.outgroups, remove = args.delete, output = args.trees + ".NoOutgroups")
-		if remove:
+		if args.delete:
 			phylomap_tree = args.trees + ".NoOutgroups"
 	
 	pars, llhs, settings = bbptp.delimit()
