@@ -55,6 +55,8 @@ def thanks(request):
 def autherror(request):
     return HttpResponse("Job id does not exists or e-mail address does not match!")
 
+def sge_error(request):
+    return HttpResponse("There is something wrong with the SGE, please try again later!")
 
 def findjob(request):
     if request.method == 'POST': # If the form has been submitted...
@@ -119,12 +121,15 @@ def ptp_index(request):
             
             #os.chmod(filepath, 0777)
             if ptp_form.cleaned_data['rooted'] == "rooted":
-                run_ptp(fin = newfilename, fout = filepath + "output", rooted = True, nmcmc = nmcmc, imcmc = imcmc, burnin = burnin, seed = seed, outgroup = outgroups, remove = removeog)
+                jobok = run_ptp_sge(fin = newfilename, fout = filepath + "output", rooted = True, nmcmc = nmcmc, imcmc = imcmc, burnin = burnin, seed = seed, outgroup = outgroups, remove = removeog)
             else:
-                run_ptp(fin = newfilename, fout = filepath + "output", rooted = False, nmcmc = nmcmc, imcmc = imcmc, burnin = burnin, seed = seed, outgroup = outgroups, remove = removeog)
+                jobok = run_ptp_sge(fin = newfilename, fout = filepath + "output", rooted = False, nmcmc = nmcmc, imcmc = imcmc, burnin = burnin, seed = seed, outgroup = outgroups, remove = removeog)
             
             #return HttpResponseRedirect('result/') # Redirect after POST
-            return show_ptp_result(request, job_id = repr(job.id), email = job.email)
+            if jobok:
+                return show_ptp_result(request, job_id = repr(job.id), email = job.email)
+            else:
+                return sge_error(request)
     else:
         ptp_form = PTPForm() # An unbound form
     context = {'pform':ptp_form, 'avaliable':frees, 'total':totals}
@@ -147,19 +152,23 @@ def show_ptp_result(request, job_id = "", email = ""):
     outpar = settings.MEDIA_ROOT + job_id +"/output.PTPPartitonSummary.txt"
     outplot = settings.MEDIA_ROOT + job_id + "/output.PTPhSupportPartition.txt.png"
     
+    frees, totals = server_stats() 
+    
     if os.path.exists(outpar) and os.path.exists(outplot):
         with open(out_path) as outfile:
             lines = outfile.readlines()
             results="<br>".join(lines)
-            context = {'result':results, 'jobid':job_id, 'email':email}
+            context = {'result':results, 'jobid':job_id, 'email':email, 'avaliable':frees, 'total':totals}
             return render(request, 'ptp/results.html', context)
-    else:
+    elif os.path.exists(out_path + ".err"):
         with open(out_path + ".err") as outfile2:
             lines2 = outfile2.readlines()
             if len(lines2) > 3:
-                return render(request, 'ptp/results.html', {'result':"Something is wrong, please check your input file", 'jobid':job_id, 'email':email})
+                return render(request, 'ptp/results.html', {'result':"Something is wrong, please check your input file", 'jobid':job_id, 'email':email, 'avaliable':frees, 'total':totals})
             else:
-                return render(request, 'ptp/results.html', {'result':"Job still running", 'jobid':job_id, 'email':email})
+                return render(request, 'ptp/results.html', {'result':"Job still running", 'jobid':job_id, 'email':email, 'avaliable':frees, 'total':totals})
+    else:
+        return render(request, 'ptp/results.html', {'result':"Job still running", 'jobid':job_id, 'email':email, 'avaliable':frees, 'total':totals})
 
 
 def show_phylomap_result(request):
@@ -175,7 +184,7 @@ def handle_uploaded_file(fin, fout):
 
 
 def run_ptp(fin, fout, nmcmc, imcmc, burnin, seed, outgroup = "" , remove = False,  rooted = False):
-    print(outgroup)
+    #print(outgroup)
     if rooted:
         if outgroup == "":
             Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
@@ -199,7 +208,33 @@ def run_ptp(fin, fout, nmcmc, imcmc, burnin, seed, outgroup = "" , remove = Fals
                 Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
                 "-b", str(burnin), "-g", outgroup, "-k", "1"], stdout=open(fout, "w"), stderr=open(fout+".err", "w"))
             
-            
+def run_ptp_sge(fin, fout, nmcmc, imcmc, burnin, seed, outgroup = "" , remove = False,  rooted = False):
+    command = ""
+    if rooted:
+        if outgroup == "":
+            command = " ".join(["python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), "-b", str(burnin), "-k", "1"])
+        else:
+            if remove:
+                command = " ".join(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                "-b", str(burnin), "-g", outgroup, "-d", "-k", "1"])
+            else:
+                command = " ".join(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                "-b", str(burnin), "-g", outgroup, "-k", "1"])
+    else:
+        if outgroup == "":
+            command = " ".join(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+            "-b", str(burnin), "-r", "-k", "1"])
+        else:
+            if remove:
+                command = " ".join(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                "-b", str(burnin), "-g", outgroup, "-d", "-k", "1"])
+            else:
+                command = " ".join(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                "-b", str(burnin), "-g", outgroup, "-k", "1"])
+    sge_script = generate_sge_script(scommand = command, fout = fout)
+    jobok = job_submission(fscript = sge_script)
+    return jobok
+
 def server_stats():
     #return avaliable and total slots
     p1 = Popen(['qstat', '-g', 'c'], stdout = subprocess.PIPE, stderr = subprocess.PIPE)
@@ -207,5 +242,26 @@ def server_stats():
     solines = stdout.split("\n")
     sstats = solines[2].split()
     return sstats[4], sstats[5]
+
+def generate_sge_script(scommand, fout):
+    with open(fout+".sge.sh", "w") as fsh:
+        fsh.write("#!/bin/bash \n")
+        fsh.write("#$ -S /bin/bash \n")
+        fsh.write("#$ -o "+fout + "\n")
+        fsh.write("#$ -e "+fout+".err \n")
+        fsh.write("#$ -v DISPLAY \n")
+        fsh.write(scommand + "\n")
+    return fout+".sge.sh"
+    
+def job_submission(fscript):
+    p1 = Popen(['qsub', fscript], stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+    stdout = p1.communicate()[0]
+    solines = stdout.split("\n")
+    if solines[0].endswith("has been submitted"):
+        return True
+    else:
+        return False
+        
+
     
 
