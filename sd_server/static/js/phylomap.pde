@@ -91,7 +91,7 @@ void draw(){
           sp.updatelock(false);
         }
         
-        TextBox tb = new TextBox(mouseX, mouseY+radiuss+2);
+        TextBox tb = new TextBox(mouseX, mouseY+radiuss+2, tb_list);
         
         curr_lock = false;
         for (int i=0; i<Species_list.size(); i++){
@@ -102,6 +102,7 @@ void draw(){
         
         for(int i=0; i<tb_list.size(); i++){
             TextBox tbi = (TextBox)tb_list.get(i);
+            tbi.update();
             tbi.draw();
         }
         
@@ -133,6 +134,23 @@ void keyPressed() {
     if (key == 'S' || key == 's'){
         save("Figure.png");
     }
+    
+    if (key == '=' || key == '+'){
+        radiuss = radiuss + 1;
+        if (radiuss > 50){radiuss = 50;}
+    }
+    
+    if (key == '-' || key == '_'){
+        radiuss = radiuss - 1;
+        if (radiuss < 2){radiuss = 2;}
+    }
+}
+
+void mouseReleased(){
+    for(int i = 0; i< tb_list.size(); i++){
+        TextBox tb = (TextBox)tb_list.get(i);
+        tb.releaseEvent();
+    }
 }
 
 class Branch{
@@ -163,7 +181,7 @@ class Branch{
 
 class Taxa{
     float x, y;
-    int radiuss = 10;
+    //int radius = 10;
     String name = "";
     boolean mouseover = false;
     boolean mouseover_species = false;
@@ -209,7 +227,7 @@ class Taxa{
             strokeWeight(1);
             stroke(192,192,192);
         }
-        ellipse((int)this.x, (int)this.y, this.radiuss, this.radiuss);
+        ellipse((int)this.x, (int)this.y, radiuss, radiuss);
         stroke(0);
         strokeWeight(2);
     }
@@ -275,7 +293,6 @@ class Species{
             for (int i = 0; i< Taxon.size(); i++){
                 Taxa taxa = (Taxa)Taxon.get(i);
                 taxa.update(true, true);
-                //taxa.draw_name(tb);
                 taxa.draw();
             }
         }
@@ -316,10 +333,23 @@ class Species{
 
 class TextBox{
     ArrayList taxa_names = new ArrayList();
+    ArrayList other_tb = null;
+    float w = 0.0;
+    float h = 0.0;
     float x, y;
-    TextBox(float x, float y){
+    float xOffset = 0.0; 
+    float yOffset = 0.0;
+    float spx, spy; 
+    boolean lock = false; 
+    boolean press = false;
+    boolean otherslocked = false;
+    
+    TextBox(float x, float y, ArrayList ot){
         this.x = x;
         this.y = y;
+        this.spx = x;
+        this.spy = y - 2 - radiuss;
+        this.other_tb = ot;
     }
     
     void add(String name){
@@ -350,7 +380,53 @@ class TextBox{
         }
         wh[0] = maxwidth + 10;
         wh[1] = height + 10;
+        this.w = wh[0];
+        this.h = wh[1];
         return wh;
+    }
+    
+    boolean overRect() {
+        if (mouseX >= this.x && mouseX <= this.x+this.w && 
+            mouseY >= this.y && mouseY <= this.y+this.h) 
+        {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    void pressEvent() {
+        if (this.overRect() && mousePressed) {
+            this.press = true;
+            this.lock = true;
+            this.xOffset = mouseX-this.x; 
+            this.yOffset = mouseY-this.y; 
+        } else {
+            this.press = false;
+        }
+    }
+    
+    void releaseEvent() {
+        lock = false;
+    }
+    
+    void update() {
+        for (int i=0; i<this.other_tb.size(); i++){
+             TextBox otb = (TextBox)this.other_tb.get(i);
+             if(otb.lock == true){
+                 this.otherslocked = true;
+                 break;
+             }else{
+                 this.otherslocked = false;
+             } 
+        }
+        if (this.otherslocked == false){
+            this.pressEvent();
+        }
+        if (this.press){
+            this.x = mouseX-xOffset; 
+            this.y = mouseY-yOffset; 
+        }
     }
     
     void draw(){
@@ -386,12 +462,15 @@ class TextBox{
         for(int i=0; i<this.taxa_names.size(); i++){
             String name = (String)this.taxa_names.get(i);
             float tx = this.x + 5;
-            float ty = this.y + 10 + radiuss + text_size * i + 5 * i;  
+            float ty = this.y + 20 + text_size * i + 5 * i;  
             stroke(0);
             fill(0);
             text(name, tx, ty);
         }
         
+        stroke(255, 33, 0);
+        line(this.spx, this.spy, this.x + this.w/2.0, this.y);
+        stroke(0);
         fill(255,255,255);
       }
     }
