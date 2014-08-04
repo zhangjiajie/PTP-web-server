@@ -23,7 +23,7 @@ class PTPForm(forms.Form):
     seed = forms.IntegerField(label = "Seed:", initial = 123, 
                                 help_text = "Change the seed if MCMC chains does not converge.")
     outgroups = forms.CharField(label = "Outgroup taxa names(if any):", required=False, 
-                                help_text = "e.g. t1 t2 t3, taxa name sperated by a single space, if specified, the tree will be rerooted accordingly." )
+                                help_text = "e.g. t1 t2 t3, taxa name separated by a single space, if specified, the tree will be rerooted accordingly." )
     removeog = forms.BooleanField(label = "Remove outgroups(if any):", required=False,
                                 help_text = "Remove outgroups that are distant related can improve the delimitation results.")
     sender = forms.EmailField(label='My e-mail address:',
