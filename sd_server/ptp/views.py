@@ -249,6 +249,7 @@ def run_ptp_sge(fin, fout, nmcmc, imcmc, burnin, seed, outgroup = "" , remove = 
 
 
 def server_stats():
+    return '0', '0'
     #return avaliable and total slots
     p1 = Popen(['qstat', '-g', 'c'], stdout = subprocess.PIPE, stderr = subprocess.PIPE)
     stdout = p1.communicate()[0]
