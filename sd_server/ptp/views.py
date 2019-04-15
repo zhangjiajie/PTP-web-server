@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.conf import settings
 from django import forms
-from models import Jobs
+from .models import Jobs
 from subprocess import Popen
 from subprocess import call
 import subprocess
@@ -189,7 +189,7 @@ def show_phylomap_result(request):
 
 
 def handle_uploaded_file(fin, fout):
-    with open(fout, 'w+') as destination:
+    with open(fout, 'wb+') as destination:
         for chunk in fin.chunks():
             destination.write(chunk)
 
@@ -198,25 +198,25 @@ def run_ptp(fin, fout, nmcmc, imcmc, burnin, seed, outgroup = "" , remove = Fals
     #print(outgroup)
     if rooted:
         if outgroup == "":
-            Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+            Popen(["nohup", "python3",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
             "-b", str(burnin), "-k", "1"], stdout=open(fout, "w"), stderr=open(fout+".err", "w"))
         else:
             if remove:
-                Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                Popen(["nohup", "python3",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
                 "-b", str(burnin), "-g", outgroup, "-d", "-k", "1"], stdout=open(fout, "w"), stderr=open(fout+".err", "w"))
             else:
-                Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                Popen(["nohup", "python3",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
                 "-b", str(burnin), "-g", outgroup, "-k", "1"], stdout=open(fout, "w"), stderr=open(fout+".err", "w"))
     else:
         if outgroup == "":
-            Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+            Popen(["nohup", "python3",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
             "-b", str(burnin), "-r", "-k", "1"], stdout=open(fout, "w"), stderr=open(fout+".err", "w"))
         else:
             if remove:
-                Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                Popen(["nohup", "python3",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
                 "-b", str(burnin), "-g", outgroup, "-d", "-k", "1"], stdout=open(fout, "w"), stderr=open(fout+".err", "w"))
             else:
-                Popen(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                Popen(["nohup", "python3",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
                 "-b", str(burnin), "-g", outgroup, "-k", "1"], stdout=open(fout, "w"), stderr=open(fout+".err", "w"))
 
             

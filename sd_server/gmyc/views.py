@@ -93,7 +93,7 @@ def show_gmyc_result(request, job_id = "", email = ""):
 
 
 def handle_uploaded_file(fin, fout):
-    with open(fout, 'w+') as destination:
+    with open(fout, 'wb+') as destination:
         for chunk in fin.chunks():
             destination.write(chunk)
 

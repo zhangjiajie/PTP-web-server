@@ -3,12 +3,18 @@ sd_web
 
 Species delimitation web server
 
-Provide web interface for PTP, GMYC, CROP and UCLUST
+Provide web interface for PTP and GMYC
 
-Requires Django 2.2 and python 3.6 
+Requires Django 1.11 and python 3.6 
 
 Deploy:
-Change settings.py to the deployment enviroment
+- Download and Install PTP
+- Clone web server into /webdata/sd_web/ 
+- Change settings.py to the deployment enviroment:
+    in settings.py set MEDIA_ROOT = /webdata/sd_web/sd_server/upload/
+    change permissions
+    copy executable (bPTP.py, summary.py and GMYC.R) to MEDIA_ROOT/bin
+- python3 manage.py runserver
 
 See this page how to install and configure X server:
 http://pythonhosted.org/ete2/tutorial/tutorial_webplugin.html#servers

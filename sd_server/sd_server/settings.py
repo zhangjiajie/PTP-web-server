@@ -12,7 +12,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '/home/zhangjiajie/GIT/PTP-web-server/sd_server/sqlite.db',  # Or path to database file if using sqlite3.
+        'NAME': '/home/jiajie/Personal/PTP-web-server/sd_server/sqlite.db',  # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
         'USER': 'zhangjiajie',
         'PASSWORD': 'prisonbreak',
@@ -50,7 +50,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = '/home/zhangjiajie/sd_server/'
+MEDIA_ROOT = '/webdata/sd_web/sd_server/upload/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -72,7 +72,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/home/zhangjiajie/GIT/PTP-web-server/sd_server/static',
+    '/webdata/sd_web/sd_server/static',
 )
 
 # List of finder classes that know how to find static files in
@@ -112,14 +112,14 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/home/zhangjiajie/GIT/PTP-web-server/sd_server/templates/',
+    '/webdata/sd_web/sd_server/templates',
 )
 
 
 TEMPLATES = [
 {
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'DIRS': ['/home/zhangjiajie/GIT/PTP-web-server/sd_server/templates/'], # here set DIRS to project's entry directory
+    'DIRS': ['/webdata/sd_web/sd_server/templates'], # here set DIRS to project's entry directory
     'APP_DIRS': True,
     'OPTIONS': {
         'context_processors': [
