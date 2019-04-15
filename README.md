@@ -5,6 +5,7 @@ Species delimitation web server
 
 Provide web interface for PTP, GMYC, CROP and UCLUST
 
+Requires Django 2.2 and python 3.6 
 
 Deploy:
 Change settings.py to the deployment enviroment
