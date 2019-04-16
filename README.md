@@ -12,8 +12,8 @@ Deploy:
 - Clone web server into /webdata/sd_web/ 
 - Change settings.py to the deployment enviroment:
     in settings.py set MEDIA_ROOT = /webdata/sd_web/sd_server/upload/
-    change permissions
-    copy executable (bPTP.py, summary.py and GMYC.R) to MEDIA_ROOT/bin
+    change permissions, particular for the R script
+    copy executable (bPTP.py, summary.py and gmyc.script.R) to MEDIA_ROOT/bin
 - python3 manage.py runserver
 
 See this page how to install and configure X server:
@@ -42,6 +42,10 @@ python manage.py runfcgi method=threaded host=193.197.73.70 port=2222
 
 sudo service apache2 restart
 
+GMYC
+====
+
+sudo apt-get install liblapack-dev liblapack3 libopenblas-base libopenblas-dev r-base-dev r-base
 
 INSTALL R GMYC:
 install.packages("ape",repos="http://cran.r-project.org/")
@@ -62,4 +66,3 @@ xxxx_summary: a text file of summary of analysis from summary.gmyc.
 xxxx_plot.pdf: plots in pdf format.
 xxxx_plot.png: plots in png format.
 
-I think you should install r-base-dev as well as r-base to use Rscript command. 
