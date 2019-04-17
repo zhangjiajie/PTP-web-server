@@ -114,3 +114,7 @@ qmgr -c 'set server submit_hosts = torque'
 qmgr -c 'set server allow_node_submit = true'
 
 sudo echo localhost > /etc/hosts.equiv
+
+
+https://jabriffa.wordpress.com/2015/02/11/installing-torquepbs-job-scheduler-on-ubuntu-14-04-lts/
+http://linuxtoolkit.blogspot.com/2014/06/bad-uid-for-job-execution-msgruserok.html
