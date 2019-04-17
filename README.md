@@ -66,3 +66,51 @@ xxxx_summary: a text file of summary of analysis from summary.gmyc.
 xxxx_plot.pdf: plots in pdf format.
 xxxx_plot.png: plots in png format.
 
+Torque
+======
+
+sudo apt-get install torque-server torque-client torque-mom torque-pam torque-scheduler
+
+/etc/init.d/torque-mom stop
+/etc/init.d/torque-scheduler stop
+/etc/init.d/torque-server stop
+
+sudo pbs_server -t create
+sudo killall pbs_server
+
+sudo echo torque.localhost > /etc/torque/server_name
+sudo echo torque.localhost > /var/spool/torque/server_priv/acl_svr/acl_hosts
+sudo echo root@torque.localhost > /var/spool/torque/server_priv/acl_svr/operators
+sudo echo root@torque.localhost > /var/spool/torque/server_priv/acl_svr/managers
+
+echo "torque.localhost np=2" > /var/spool/torque/server_priv/nodes
+
+echo torque.localhost > /var/spool/torque/mom_priv/config
+
+
+sudo /etc/init.d/torque-server start
+sudo /etc/init.d/torque-scheduler start
+sudo /etc/init.d/torque-mom start
+
+
+# set scheduling properties, looks like this takes some time
+sudo qmgr -c 'set server scheduling = true'
+sudo qmgr -c 'set server keep_completed = 300'
+sudo qmgr -c 'set server mom_job_sync = true'
+
+
+# create default queue
+qmgr -c 'create queue batch'
+qmgr -c 'set queue batch queue_type = execution'
+qmgr -c 'set queue batch started = true'
+qmgr -c 'set queue batch enabled = true'
+qmgr -c 'set queue batch resources_default.walltime = 1:00:00'
+qmgr -c 'set queue batch resources_default.nodes = 1'
+qmgr -c 'set server default_queue = batch'
+
+
+# configure submission pool
+qmgr -c 'set server submit_hosts = torque'
+qmgr -c 'set server allow_node_submit = true'
+
+sudo echo localhost > /etc/hosts.equiv
