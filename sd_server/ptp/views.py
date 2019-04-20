@@ -122,13 +122,13 @@ def ptp_index(request):
             
             #os.chmod(filepath, 0777)
             if ptp_form.cleaned_data['rooted'] == "rooted":
-                jobok = run_ptp(fin = newfilename, fout = filepath + "output", rooted = True, nmcmc = nmcmc, imcmc = imcmc, burnin = burnin, seed = seed, outgroup = outgroups, remove = removeog)
+                jobok = run_ptp_torque(fin=newfilename, fout=filepath+"output", rooted = True, nmcmc = nmcmc, imcmc = imcmc, burnin = burnin, seed = seed, outgroup = outgroups, remove = removeog)
             else:
-                jobok = run_ptp(fin = newfilename, fout = filepath + "output", rooted = False, nmcmc = nmcmc, imcmc = imcmc, burnin = burnin, seed = seed, outgroup = outgroups, remove = removeog)
+                jobok = run_ptp_torque(fin=newfilename, fout=filepath+"output", rooted = False, nmcmc = nmcmc, imcmc = imcmc, burnin = burnin, seed = seed, outgroup = outgroups, remove = removeog)
             
             #return HttpResponseRedirect('result/') # Redirect after POST
             #if jobok:
-            return show_ptp_result(request, job_id = repr(job.id), email = job.email)
+            return show_ptp_result(request, job_id=repr(job.id), email=job.email)
             #else:
             #return sge_error(request)
     else:
@@ -219,29 +219,29 @@ def run_ptp(fin, fout, nmcmc, imcmc, burnin, seed, outgroup = "" , remove = Fals
                 Popen(["nohup", "python3",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
                 "-b", str(burnin), "-g", outgroup, "-k", "1"], stdout=open(fout, "w"), stderr=open(fout+".err", "w"))
 
-            
+
 def run_ptp_sge(fin, fout, nmcmc, imcmc, burnin, seed, outgroup = "" , remove = False,  rooted = False):
     command = ""
     if rooted:
         if outgroup == "":
-            command = " ".join(["python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), "-b", str(burnin), "-k", "1"])
+            command = " ".join(["python3",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), "-b", str(burnin), "-k", "1"])
         else:
             if remove:
-                command = " ".join(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                command = " ".join(["nohup", "python3",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
                 "-b", str(burnin), "-g", outgroup, "-d", "-k", "1"])
             else:
-                command = " ".join(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                command = " ".join(["nohup", "python3",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
                 "-b", str(burnin), "-g", outgroup, "-k", "1"])
     else:
         if outgroup == "":
-            command = " ".join(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+            command = " ".join(["nohup", "python3",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
             "-b", str(burnin), "-r", "-k", "1"])
         else:
             if remove:
-                command = " ".join(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                command = " ".join(["nohup", "python3",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
                 "-b", str(burnin), "-g", outgroup, "-d", "-k", "1"])
             else:
-                command = " ".join(["nohup", "python",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                command = " ".join(["nohup", "python3",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
                 "-b", str(burnin), "-g", outgroup, "-k", "1"])
     sge_script = generate_sge_script(scommand = command, fout = fout)
     jobok = job_submission(fscript = sge_script)
@@ -268,7 +268,19 @@ def generate_sge_script(scommand, fout):
         fsh.write(scommand + "\n")
     return fout+".sge.sh"
 
-    
+
+def generate_torque_script(scommand, fout):
+    with open(fout+".sge.sh", "w") as fsh:
+        fsh.write("#!/bin/bash \n")
+        fsh.write("#PBS -q batch \n")
+        fsh.write("#PBS -l nodes=1:ppn=1 \n")
+        fsh.write("#PBS -V \n")
+        fsh.write("#PBS -o localhost:"+fout + "\n")
+        fsh.write("#PBS -e localhost:"+fout+".err \n")
+        fsh.write(scommand + "\n")
+    return fout+".sge.sh"
+
+
 def job_submission(fscript):
     p1 = Popen(['qsub', fscript], stdout = subprocess.PIPE, stderr = subprocess.PIPE)
     stdout = p1.communicate()[0]
@@ -277,7 +289,36 @@ def job_submission(fscript):
         return True
     else:
         return False
-        
 
+
+def run_ptp_torque(fin, fout, nmcmc, imcmc, burnin, seed, outgroup="", remove=False, rooted=False):
+    command=""
+    if rooted:
+        if outgroup == "":
+            command = " ".join(["python3",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), "-b", str(burnin), "-k", "1"])
+        else:
+            if remove:
+                command = " ".join(["python3",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                "-b", str(burnin), "-g", outgroup, "-d", "-k", "1"])
+            else:
+                command = " ".join(["python3",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                "-b", str(burnin), "-g", outgroup, "-k", "1"])
+    else:
+        if outgroup == "":
+            command = " ".join(["python3",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+            "-b", str(burnin), "-r", "-k", "1"])
+        else:
+            if remove:
+                command = " ".join(["python3",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                "-b", str(burnin), "-g", outgroup, "-d", "-k", "1"])
+            else:
+                command = " ".join(["python3",  settings.MEDIA_ROOT + "bin" + "/bPTP.py", "-t", fin, "-o", fout, "-s", str(seed), "-i", str(nmcmc), "-n", str(imcmc), 
+                "-b", str(burnin), "-g", outgroup, "-k", "1"])
     
+    sge_script=generate_torque_script(scommand=command, fout=fout)
+    
+    p1 = Popen(['qsub', sge_script], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout = p1.communicate()[0]
+    print(stdout)
+    return True
 
