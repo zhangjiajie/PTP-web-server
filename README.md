@@ -1,6 +1,5 @@
 sd_web
 ======
-
 Species delimitation web server
 
 Provide web interface for PTP and GMYC
@@ -9,18 +8,26 @@ Requires Django 1.11 and python 3.6
 
 Deploy:
 - Download and Install PTP
+- Install X server if needed
 - Clone web server into /webdata/sd_web/ 
 - Change settings.py to the deployment enviroment:
     in settings.py set MEDIA_ROOT = /webdata/sd_web/sd_server/upload/
     change permissions, particular for the R script
     copy executable (bPTP.py, summary.py and gmyc.script.R) to MEDIA_ROOT/bin
+- Install R depency
+- Setup Torque PBS
 - python3 manage.py runserver
 
+
+X-Server
+========
 See this page how to install and configure X server:
 http://pythonhosted.org/ete2/tutorial/tutorial_webplugin.html#servers
 https://groups.google.com/forum/#!searchin/etetoolkit/x$20server$20/etetoolkit/XSIeQyX9W64/0mPc4n1SrDMJ
 
 
+Apache
+======
 Add this to /etc/apache2/httpd.conf:
 FastCGIExternalServer /webdata/sd_web/sd_server/sd_server.fcgi -host 193.197.73.70:2222
 
@@ -44,7 +51,6 @@ sudo service apache2 restart
 
 GMYC
 ====
-
 sudo apt-get install liblapack-dev liblapack3 libopenblas-base libopenblas-dev r-base-dev r-base
 
 INSTALL R GMYC:
@@ -66,9 +72,9 @@ xxxx_summary: a text file of summary of analysis from summary.gmyc.
 xxxx_plot.pdf: plots in pdf format.
 xxxx_plot.png: plots in png format.
 
+
 Torque
 ======
-
 sudo apt-get install torque-server torque-client torque-mom torque-pam torque-scheduler
 
 /etc/init.d/torque-mom stop
@@ -118,3 +124,4 @@ sudo echo localhost > /etc/hosts.equiv
 
 https://jabriffa.wordpress.com/2015/02/11/installing-torquepbs-job-scheduler-on-ubuntu-14-04-lts/
 http://linuxtoolkit.blogspot.com/2014/06/bad-uid-for-job-execution-msgruserok.html
+http://docs.adaptivecomputing.com/torque/4-2-7/Content/topics/12-appendices/commandsOverview.htm
